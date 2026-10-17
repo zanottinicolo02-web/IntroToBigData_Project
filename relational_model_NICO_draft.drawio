@@ -1,0 +1,232 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="relational-model" name="Relational model">
+    <mxGraphModel dx="1071" dy="645" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;" value="Relational model: PUDL + EPA CEMS, Northeast (MySQL)" vertex="1">
+          <mxGeometry height="30" width="900" x="40" y="15" as="geometry" />
+        </mxCell>
+        <mxCell id="plants" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#dae8fc;strokeColor=#6c8ebf;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fontSize=13;" value="plants" vertex="1">
+          <mxGeometry height="224" width="340" x="40" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_0" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   plant_id_eia : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="340" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_1" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="plant_name_eia : VARCHAR(255)" vertex="1">
+          <mxGeometry height="22" width="340" y="48" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_2" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="city : VARCHAR(100)" vertex="1">
+          <mxGeometry height="22" width="340" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_3" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="state : CHAR(2)" vertex="1">
+          <mxGeometry height="22" width="340" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_4" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="county : VARCHAR(100)" vertex="1">
+          <mxGeometry height="22" width="340" y="114" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_5" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="county_id_fips : CHAR(5)" vertex="1">
+          <mxGeometry height="22" width="340" y="136" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_6" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="latitude : DECIMAL(9,6)" vertex="1">
+          <mxGeometry height="22" width="340" y="158" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_7" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="longitude : DECIMAL(9,6)" vertex="1">
+          <mxGeometry height="22" width="340" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="plants_8" parent="plants" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="timezone : VARCHAR(40)" vertex="1">
+          <mxGeometry height="22" width="340" y="202" as="geometry" />
+        </mxCell>
+        <mxCell id="generators" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#dae8fc;strokeColor=#6c8ebf;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fontSize=13;" value="generators" vertex="1">
+          <mxGeometry height="70" width="280" x="560" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="generators_0" parent="generators" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=3;strokeWidth=0.5;" value="PK, FK   plant_id_eia : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="280" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="generators_1" parent="generators" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   generator_id : VARCHAR(20)" vertex="1">
+          <mxGeometry height="22" width="280" y="48" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#dae8fc;strokeColor=#6c8ebf;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fontSize=13;" value="generator_yearly" vertex="1">
+          <mxGeometry height="312" width="320" x="1050" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_0" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=3;strokeWidth=0.5;" value="PK, FK   plant_id_eia : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="320" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_1" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=3;strokeWidth=0.5;" value="PK, FK   generator_id : VARCHAR(20)" vertex="1">
+          <mxGeometry height="22" width="320" y="48" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_2" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   report_date : DATE" vertex="1">
+          <mxGeometry height="22" width="320" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_3" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="utility_id_eia : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="320" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_4" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="operational_status_code : VARCHAR(10)" vertex="1">
+          <mxGeometry height="22" width="320" y="114" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_5" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="capacity_mw : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="320" y="136" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_6" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="summer_capacity_mw : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="320" y="158" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_7" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="winter_capacity_mw : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="320" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_8" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="prime_mover_code : VARCHAR(10)" vertex="1">
+          <mxGeometry height="22" width="320" y="202" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_9" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="energy_source_code_1 : VARCHAR(10)" vertex="1">
+          <mxGeometry height="22" width="320" y="224" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_10" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_type_code_pudl : VARCHAR(30)" vertex="1">
+          <mxGeometry height="22" width="320" y="246" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_11" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="technology_description : VARCHAR(100)" vertex="1">
+          <mxGeometry height="22" width="320" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="generator_yearly_12" parent="generator_yearly" style="text;strokeColor=#6c8ebf;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="generator_retirement_date : DATE" vertex="1">
+          <mxGeometry height="22" width="320" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffe6cc;strokeColor=#d79b00;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fontSize=13;" value="monthly_generation_fuel" vertex="1">
+          <mxGeometry height="290" width="340" x="40" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_0" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=3;strokeWidth=0.5;" value="PK, FK   plant_id_eia : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="340" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_1" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   report_date : DATE" vertex="1">
+          <mxGeometry height="22" width="340" y="48" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_2" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   energy_source_code : VARCHAR(10)" vertex="1">
+          <mxGeometry height="22" width="340" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_3" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   prime_mover_code : VARCHAR(10)" vertex="1">
+          <mxGeometry height="22" width="340" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_4" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_type_code_pudl : VARCHAR(30)" vertex="1">
+          <mxGeometry height="22" width="340" y="114" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_5" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_type_code_agg : VARCHAR(10)" vertex="1">
+          <mxGeometry height="22" width="340" y="136" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_6" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_consumed_units : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="340" y="158" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_7" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_consumed_for_electricity_units : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="340" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_8" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_mmbtu_per_unit : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="340" y="202" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_9" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_consumed_mmbtu : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="340" y="224" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_10" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="fuel_consumed_for_electricity_mmbtu : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="340" y="246" as="geometry" />
+        </mxCell>
+        <mxCell id="monthly_generation_fuel_11" parent="monthly_generation_fuel" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="net_generation_mwh : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="340" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#d5e8d4;strokeColor=#82b366;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fontSize=13;" value="epa_eia_crosswalk" vertex="1">
+          <mxGeometry height="202" width="280" x="560" y="218" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_0" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   crosswalk_id : INT UNSIGNED AUTO_INCREMENT" vertex="1">
+          <mxGeometry height="22" width="280" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_1" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="report_year : SMALLINT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="280" y="48" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_2" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="plant_id_epa : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="280" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_3" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="emissions_unit_id_epa : VARCHAR(20)" vertex="1">
+          <mxGeometry height="22" width="280" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_4" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="generator_id_epa : VARCHAR(20)" vertex="1">
+          <mxGeometry height="22" width="280" y="114" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_5" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;strokeWidth=0.5;" value="FK   plant_id_eia : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="280" y="136" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_6" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="boiler_id : VARCHAR(20)" vertex="1">
+          <mxGeometry height="22" width="280" y="158" as="geometry" />
+        </mxCell>
+        <mxCell id="epa_eia_crosswalk_7" parent="epa_eia_crosswalk" style="text;strokeColor=#82b366;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;strokeWidth=0.5;" value="FK   generator_id : VARCHAR(20)" vertex="1">
+          <mxGeometry height="22" width="280" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffe6cc;strokeColor=#d79b00;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fontSize=13;" value="cems_hourly_emissions" vertex="1">
+          <mxGeometry height="378" width="280" x="480" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_0" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   plant_id_epa : INT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="280" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_1" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   emissions_unit_id_epa : VARCHAR(20)" vertex="1">
+          <mxGeometry height="22" width="280" y="48" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_2" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;strokeWidth=0.5;" value="PK   operating_datetime_utc : DATETIME" vertex="1">
+          <mxGeometry height="22" width="280" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_3" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=2;strokeWidth=0.5;" value="FK (logical)   plant_id_eia : INT UNSIGNED NULL" vertex="1">
+          <mxGeometry height="22" width="280" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_4" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="state : CHAR(2)" vertex="1">
+          <mxGeometry height="22" width="280" y="114" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_5" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="year : SMALLINT UNSIGNED" vertex="1">
+          <mxGeometry height="22" width="280" y="136" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_6" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="operating_time_hours : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="280" y="158" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_7" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="gross_load_mw : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="280" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_8" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="heat_content_mmbtu : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="280" y="202" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_9" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="steam_load_lbs : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="280" y="224" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_10" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="so2_mass_lbs : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="280" y="246" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_11" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="so2_mass_measurement_code : VARCHAR(40)" vertex="1">
+          <mxGeometry height="22" width="280" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_12" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="nox_mass_lbs : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="280" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_13" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="nox_mass_measurement_code : VARCHAR(40)" vertex="1">
+          <mxGeometry height="22" width="280" y="312" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_14" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="co2_mass_tons : DOUBLE" vertex="1">
+          <mxGeometry height="22" width="280" y="334" as="geometry" />
+        </mxCell>
+        <mxCell id="cems_hourly_emissions_15" parent="cems_hourly_emissions" style="text;strokeColor=#d79b00;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=6;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=0;strokeWidth=0.5;" value="co2_mass_measurement_code : VARCHAR(40)" vertex="1">
+          <mxGeometry height="22" width="280" y="356" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="plants" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=12;endSize=12;fontSize=11;exitX=1;exitY=0.156;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="generators" value="plant_id_eia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="generators" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=12;endSize=12;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.119;entryDx=0;entryDy=0;" target="generator_yearly" value="plant_id_eia, generator_id">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="plants" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=12;endSize=12;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="monthly_generation_fuel" value="plant_id_eia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="plants" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=12;endSize=12;fontSize=11;exitX=1;exitY=0.9;exitDx=0;exitDy=0;entryX=0;entryY=0.272;entryDx=0;entryDy=0;dashed=1;" target="cems_hourly_emissions" value="plant_id_eia (logical, nullable)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="generators" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=12;endSize=12;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="epa_eia_crosswalk" value="plant_id_eia, generator_id">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="epa_eia_crosswalk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToMany;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=12;endSize=12;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" target="cems_hourly_emissions" value="plant_id_epa, emissions_unit_id_epa, year = report_year (logical join)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=12;strokeColor=#999999;fillColor=#f5f5f5;spacingLeft=8;spacingTop=4;" value="&lt;b&gt;Legend&lt;/b&gt;&lt;br&gt;Bold = primary key, italic = foreign key&lt;br&gt;Dashed line = logical join (no FK constraint in MySQL)&lt;br&gt;Blue = EIA dimensions, orange = fact tables, green = bridge table" vertex="1">
+          <mxGeometry height="90" width="320" x="860" y="420" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
