@@ -21,10 +21,40 @@ import mysql.connector
 # QUERIES
 # ============================================================
 # Q1: CO2, SO2 and NOx emitted per MWh generated, for each plant and year.
-# Only plants burning a single fuel (coal, gas or oil) in that year are kept.
-# Output: year, state, plant name, fuel type and the three intensities.
-# Ordered by year and CO2 intensity (highest first).
+
 Q1 = """
+WITH emission AS (
+  SELECT plant_id_eia,
+         year,
+         SUM(co2_mass_tons) AS total_co2_tons,
+         SUM(so2_mass_lbs)  AS total_so2_lbs,
+         SUM(nox_mass_lbs)  AS total_nox_lbs
+  FROM cems_hourly_emissions
+  WHERE plant_id_eia IS NOT NULL
+  GROUP BY plant_id_eia, year
+),
+fuel_totals AS (
+  SELECT plant_id_eia,
+         YEAR(report_date) AS year,
+         fuel_type_code_pudl AS fuel_type,
+         SUM(net_generation_mwh) AS fuel_net_generation_mwh
+  FROM monthly_generation_fuel
+  WHERE fuel_type_code_pudl IN ('coal', 'gas', 'oil')
+  GROUP BY plant_id_eia, YEAR(report_date), fuel_type_code_pudl
+),
+generation AS (
+  SELECT pyt.plant_id_eia,
+         pyt.year,
+         pyt.total_net_generation_mwh,
+         MIN(ft.fuel_type) AS fuel_type
+  FROM plant_year_totals AS pyt
+  JOIN fuel_totals AS ft
+    ON ft.plant_id_eia = pyt.plant_id_eia
+   AND ft.year         = pyt.year
+   AND ft.fuel_net_generation_mwh = pyt.max_fuel_net_generation_mwh
+  WHERE pyt.total_net_generation_mwh > 0
+  GROUP BY pyt.plant_id_eia, pyt.year, pyt.total_net_generation_mwh
+)
 SELECT emission.year,
        plants.state,
        plants.plant_name_eia,
@@ -32,64 +62,81 @@ SELECT emission.year,
        ROUND(emission.total_co2_tons / generation.total_net_generation_mwh, 4) AS co2_tons_per_mwh,
        ROUND(emission.total_so2_lbs  / generation.total_net_generation_mwh, 4) AS so2_lbs_per_mwh,
        ROUND(emission.total_nox_lbs  / generation.total_net_generation_mwh, 4) AS nox_lbs_per_mwh
-FROM (
-  SELECT plant_id_eia, year,
+FROM emission
+JOIN generation
+  ON generation.plant_id_eia = emission.plant_id_eia
+ AND generation.year         = emission.year
+ AND generation.rn           = 1
+JOIN plants
+  ON plants.plant_id_eia = emission.plant_id_eia
+WHERE generation.total_net_generation_mwh > 0
+ORDER BY emission.year, co2_tons_per_mwh DESC
+"""
+
+# Q1 AVG: same intensities across all plants for each year and dominant fuel type
+# (total emissions / total net generation across all fuels), using non-NULL emission
+# denominators so missing pollutant totals do not dilute averages.
+Q1_AVG = """
+WITH emission AS (
+  SELECT plant_id_eia,
+         year,
          SUM(co2_mass_tons) AS total_co2_tons,
          SUM(so2_mass_lbs)  AS total_so2_lbs,
          SUM(nox_mass_lbs)  AS total_nox_lbs
   FROM cems_hourly_emissions
   WHERE plant_id_eia IS NOT NULL
   GROUP BY plant_id_eia, year
-) AS emission
-JOIN (
-  SELECT plant_id_eia, YEAR(report_date) AS year,
-         MIN(fuel_type_code_pudl) AS fuel_type,
-         SUM(net_generation_mwh)  AS total_net_generation_mwh
+),
+fuel_totals AS (
+  SELECT plant_id_eia,
+         YEAR(report_date) AS year,
+         fuel_type_code_pudl AS fuel_type,
+         SUM(net_generation_mwh) AS fuel_net_generation_mwh
   FROM monthly_generation_fuel
   WHERE fuel_type_code_pudl IN ('coal', 'gas', 'oil')
-  GROUP BY plant_id_eia, YEAR(report_date)
-  HAVING COUNT(DISTINCT fuel_type_code_pudl) = 1 AND SUM(net_generation_mwh) > 0
-) AS generation
-  ON generation.plant_id_eia = emission.plant_id_eia
- AND generation.year         = emission.year
-JOIN plants
-  ON plants.plant_id_eia = emission.plant_id_eia
-ORDER BY emission.year, co2_tons_per_mwh DESC
-"""
-# Q1 AVG: the same intensities over all the plants of each year and fuel type
-# (total emissions / total generation), to see how they change through the years.
-# Output: year, fuel type, number of plants, average CO2, SO2 and NOx per MWh.
-# Ordered by year and fuel type.
-Q1_AVG = """
+  GROUP BY plant_id_eia, YEAR(report_date), fuel_type_code_pudl
+),
+generation AS (
+  SELECT pyt.plant_id_eia,
+         pyt.year,
+         pyt.total_net_generation_mwh,
+         MIN(ft.fuel_type) AS fuel_type
+  FROM plant_year_totals AS pyt
+  JOIN fuel_totals AS ft
+    ON ft.plant_id_eia = pyt.plant_id_eia
+   AND ft.year         = pyt.year
+   AND ft.fuel_net_generation_mwh = pyt.max_fuel_net_generation_mwh
+  WHERE pyt.total_net_generation_mwh > 0
+  GROUP BY pyt.plant_id_eia, pyt.year, pyt.total_net_generation_mwh
+)
 SELECT generation.year,
        generation.fuel_type,
        COUNT(*) AS number_of_plants,
-       ROUND(SUM(emission.total_co2_tons) / SUM(generation.total_net_generation_mwh), 4) AS avg_co2_tons_per_mwh,
-       ROUND(SUM(emission.total_so2_lbs)  / SUM(generation.total_net_generation_mwh), 4) AS avg_so2_lbs_per_mwh,
-       ROUND(SUM(emission.total_nox_lbs)  / SUM(generation.total_net_generation_mwh), 4) AS avg_nox_lbs_per_mwh
-FROM (
-  SELECT plant_id_eia, year,
-         SUM(co2_mass_tons) AS total_co2_tons,
-         SUM(so2_mass_lbs)  AS total_so2_lbs,
-         SUM(nox_mass_lbs)  AS total_nox_lbs
-  FROM cems_hourly_emissions
-  WHERE plant_id_eia IS NOT NULL
-  GROUP BY plant_id_eia, year
-) AS emission
-JOIN (
-  SELECT plant_id_eia, YEAR(report_date) AS year,
-         MIN(fuel_type_code_pudl) AS fuel_type,
-         SUM(net_generation_mwh)  AS total_net_generation_mwh
-  FROM monthly_generation_fuel
-  WHERE fuel_type_code_pudl IN ('coal', 'gas', 'oil')
-  GROUP BY plant_id_eia, YEAR(report_date)
-  HAVING COUNT(DISTINCT fuel_type_code_pudl) = 1 AND SUM(net_generation_mwh) > 0
-) AS generation
+       ROUND(
+         SUM(emission.total_co2_tons) /
+         SUM(CASE WHEN emission.total_co2_tons IS NOT NULL THEN generation.total_net_generation_mwh END),
+         4
+       ) AS avg_co2_tons_per_mwh,
+       ROUND(
+         SUM(emission.total_so2_lbs) /
+         SUM(CASE WHEN emission.total_so2_lbs IS NOT NULL THEN generation.total_net_generation_mwh END),
+         4
+       ) AS avg_so2_lbs_per_mwh,
+       ROUND(
+         SUM(emission.total_nox_lbs) /
+         SUM(CASE WHEN emission.total_nox_lbs IS NOT NULL THEN generation.total_net_generation_mwh END),
+         4
+       ) AS avg_nox_lbs_per_mwh
+FROM emission
+JOIN generation
   ON generation.plant_id_eia = emission.plant_id_eia
  AND generation.year         = emission.year
+ AND generation.rn           = 1
+WHERE generation.total_net_generation_mwh > 0
 GROUP BY generation.year, generation.fuel_type
 ORDER BY generation.year, generation.fuel_type
 """
+
 
 # Q4: seasonal capacity margin. Summer vs winter capacity of the operating thermal
 # generators (coal, gas, oil), by state, technology and year. The summer derating
