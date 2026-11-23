@@ -448,7 +448,7 @@ def connect():
 
 def show_plan(db, sql):
     cur = db.cursor(dictionary=True)
-    cur.execute("EXPLAIN " + sql)
+    cur.execute("EXPLAIN FORMAT=TRADITIONAL " + sql)
     for r in cur.fetchall():
         print(f"  {str(r['table']):<24} key={r['key']}  rows={r['rows']}  {r['Extra'] or ''}")
 
@@ -515,7 +515,8 @@ def run_setup(cur, b):
     for stmt in b.get("setup_sql", []):
         print(f"  setup: {stmt}")
         cur.execute(stmt)
-        cur.fetchall()  # ANALYZE TABLE returns a result set: consume it
+        if cur.with_rows:
+            cur.fetchall()  # ANALYZE TABLE returns a result set: consume it
 
 def run_benchmark(db, b):
     cur = db.cursor()
@@ -551,6 +552,9 @@ def run_benchmark(db, b):
 def main():
     names = sys.argv[1:] or list(BENCHMARKS)
     db = connect()
+    cur = db.cursor()
+    for b in BENCHMARKS.values():
+        drop_indexes(cur, b)
     for name in names:
         run_benchmark(db, BENCHMARKS[name])
     db.close()

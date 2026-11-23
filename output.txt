@@ -1,0 +1,193 @@
+PS C:\Users\spgil\OneDrive\Documents\RIT\fall-26\intro-to-big-data\IntroToBigData_Project> python .\queriesSQL.py
+MySQL password: 
+
+============================================================
+Q1 - CO2, SO2, NOx intensity per MWh
+============================================================
+EXPLAIN without index [Q1 - CO2, SO2, NOx intensity per MWh]:
+  <derived3>               key=None  rows=2013420  Using where; Using temporary; Using filesort
+  plants                   key=PRIMARY  rows=1  
+  <derived2>               key=<auto_key0>  rows=10760  Using where
+  <derived4>               key=None  rows=201341  Using where; Using temporary
+  <derived5>               key=<auto_key0>  rows=10  
+  <derived5>               key=None  rows=201341  Using temporary
+  monthly_generation_fuel  key=None  rows=223713  Using where; Using temporary
+  cems_hourly_emissions    key=None  rows=50970880  Using where; Using temporary
+Running without index [Q1 - CO2, SO2, NOx intensity per MWh]...
+Creating indexes...
+EXPLAIN with index [Q1 - CO2, SO2, NOx intensity per MWh]:
+  <derived3>               key=None  rows=2013420  Using where; Using temporary; Using filesort
+  plants                   key=PRIMARY  rows=1  
+  <derived2>               key=<auto_key0>  rows=5978  Using where
+  <derived4>               key=None  rows=201341  Using where; Using temporary
+  <derived5>               key=<auto_key0>  rows=10  
+  <derived5>               key=None  rows=201341  Using temporary
+  monthly_generation_fuel  key=None  rows=223713  Using where; Using temporary
+  cems_hourly_emissions    key=idx_cems_plant_year  rows=25485440  Using where; Using index
+Running with index [Q1 - CO2, SO2, NOx intensity per MWh]...
+
+Q1 - CO2, SO2, NOx intensity per MWh - Q1 - CO2, SO2, NOx intensity per MWh
+                  before     after  speed-up
+1st run (s)       28.835    16.734    1.723x
+2nd run (s)       27.032    12.786    2.114x
+index build time: 55.892s
+
+Average emissions per MWh (by year and fuel)
+year              fuel_type         number_of_plants  avg_co2_tons_per_mwh  avg_so2_lbs_per_mwh  avg_nox_lbs_per_mwh
+2005              coal              66                1.0189            15.0              2.8535          
+2005              gas               149               0.4804            0.1126            0.4152          
+2005              oil               64                0.8956            6.8451            2.3544          
+2010              coal              60                1.0584            7.5436            2.2843          
+2010              gas               166               0.4862            0.0628            0.2716          
+2010              oil               51                1.3731            6.5728            5.0405          
+2015              coal              34                1.0832            5.8007            2.7135          
+2015              gas               170               0.4814            0.0406            0.2397          
+2015              oil               46                1.0538            4.6712            2.5711          
+2018              coal              28                1.1319            3.0525            1.3344          
+2018              gas               184               0.459             0.0255            0.1755          
+2018              oil               43                1.1219            3.6915            3.1639          
+2020              coal              20                1.1655            2.8115            1.6703          
+2020              gas               191               0.4496            0.0119            0.1347          
+2020              oil               37                1.789             1.8694            4.9004          
+2023              coal              15                1.261             3.5977            1.0712          
+2023              gas               178               0.4492            0.009             0.126           
+2023              oil               36                1.7309            3.4256            4.1503          
+2025              coal              12                1.2241            3.6407            1.2073          
+2025              gas               177               0.4619            0.0422            0.1765          
+2025              oil               34                1.3813            3.7139            3.1645          
+Existing index dropped: idx_cems_plant_year
+
+============================================================
+Q2 - Heat Rate Degradation vs. Retirement Date
+============================================================
+EXPLAIN without index [Q2 - Heat Rate Degradation vs. Retirement Date]:
+  c                        key=None  rows=50970880  Using where; Using temporary; Using filesort
+  <derived2>               key=<auto_key0>  rows=460  Using where
+  x                        key=None  rows=3340  Using where; Using temporary; Using filesort
+  g                        key=PRIMARY  rows=4  Using index
+  <derived3>               key=<auto_key0>  rows=10  
+  generator_yearly         key=PRIMARY  rows=33637  
+Running without index [Q2 - Heat Rate Degradation vs. Retirement Date]...
+Creating indexes...
+  setup: ALTER TABLE cems_hourly_emissions STATS_SAMPLE_PAGES = 1000
+  setup: ANALYZE TABLE cems_hourly_emissions
+EXPLAIN with index [Q2 - Heat Rate Degradation vs. Retirement Date]:
+  <derived2>               key=None  rows=135974  Using where; Using temporary; Using filesort
+  c                        key=idx_cems_heat_rate  rows=7955  Using where; Using index
+  x                        key=None  rows=3340  Using where; Using temporary; Using filesort
+  g                        key=PRIMARY  rows=4  Using index
+  <derived3>               key=<auto_key0>  rows=10  
+  generator_yearly         key=PRIMARY  rows=33637  
+Running with index [Q2 - Heat Rate Degradation vs. Retirement Date]...
+
+Q2 - Heat Rate Degradation vs. Retirement Date - Q2 - Heat Rate Degradation vs. Retirement Date
+                  before     after  speed-up
+1st run (s)       24.442     2.317   10.548x
+2nd run (s)       24.242     2.505    9.678x
+index build time: 51.514s
+Existing index dropped: idx_cems_heat_rate
+
+============================================================
+Q3 - Spatial Hotspots
+============================================================
+EXPLAIN without index [Pareto test]:
+  <derived2>               key=None  rows=51354681  
+  <derived3>               key=None  rows=51354681  Using filesort
+  cems_hourly_emissions    key=None  rows=51354681  Using temporary
+  <derived5>               key=None  rows=46219211  
+  <derived6>               key=None  rows=46219211  Using filesort
+  p                        key=None  rows=4263  Using temporary
+  <derived7>               key=<auto_key0>  rows=10841  
+  cems_hourly_emissions    key=None  rows=51354681  Using where; Using temporary
+Running without index [Pareto test]...
+EXPLAIN without index [Top 10 hotspots]:
+  <derived2>               key=None  rows=46219211  Using where
+  <derived3>               key=None  rows=46219211  Using filesort
+  p                        key=None  rows=4263  Using temporary
+  <derived4>               key=<auto_key0>  rows=10841  
+  cems_hourly_emissions    key=None  rows=51354681  Using where; Using temporary
+  <derived2>               key=None  rows=46219211  Using where
+  <derived2>               key=None  rows=46219211  Using where
+  <union1,5,9>             key=None  rows=None  Using temporary; Using filesort
+Running without index [Top 10 hotspots]...
+Creating indexes...
+EXPLAIN with index [Pareto test]:
+  <derived2>               key=None  rows=51354681  
+  <derived3>               key=None  rows=51354681  Using filesort
+  cems_hourly_emissions    key=idx_cems_facility_emissions  rows=51354681  Using index
+  <derived5>               key=None  rows=25677340  
+  <derived6>               key=None  rows=25677340  Using filesort
+  p                        key=None  rows=4263  Using temporary
+  <derived7>               key=<auto_key0>  rows=6023  
+  cems_hourly_emissions    key=idx_cems_plant  rows=25677340  Using where; Using index
+Running with index [Pareto test]...
+EXPLAIN with index [Top 10 hotspots]:
+  <derived2>               key=None  rows=25677340  Using where
+  <derived3>               key=None  rows=25677340  Using filesort
+  p                        key=None  rows=4263  Using temporary
+  <derived4>               key=<auto_key0>  rows=6023  
+  cems_hourly_emissions    key=idx_cems_plant  rows=25677340  Using where; Using index
+  <derived2>               key=None  rows=25677340  Using where
+  <derived2>               key=None  rows=25677340  Using where
+  <union1,5,9>             key=None  rows=None  Using temporary; Using filesort
+Running with index [Top 10 hotspots]...
+
+Q3 - Spatial Hotspots - Pareto test
+                  before     after  speed-up
+1st run (s)       50.846    28.577    1.779x
+2nd run (s)       50.918    24.813    2.052x
+index build time: 128.011s
+
+Q3 - Spatial Hotspots - Top 10 hotspots
+                  before     after  speed-up
+1st run (s)       23.887    12.340    1.936x
+2nd run (s)       23.921    12.308    1.944x
+index build time: 128.011s
+Existing index dropped: idx_cems_facility_emissions
+Existing index dropped: idx_cems_plant
+
+============================================================
+Q4 - Seasonal capacity margins
+============================================================
+EXPLAIN without index [Q4 - Seasonal capacity margins]:
+  generator_yearly         key=None  rows=33637  Using where; Using temporary; Using filesort
+  plants                   key=PRIMARY  rows=1  
+  <derived2>               key=<auto_key0>  rows=10  
+  generator_yearly         key=PRIMARY  rows=33637  
+Running without index [Q4 - Seasonal capacity margins]...
+Creating indexes...
+EXPLAIN with index [Q4 - Seasonal capacity margins]:
+  generator_yearly         key=idx_gy_status_cover  rows=16818  Using where; Using index; Using temporary; Using filesort
+  plants                   key=PRIMARY  rows=1  
+  <derived2>               key=<auto_key0>  rows=10  
+  generator_yearly         key=PRIMARY  rows=33637  
+Running with index [Q4 - Seasonal capacity margins]...
+
+Q4 - Seasonal capacity margins - Q4 - Seasonal capacity margins
+                  before     after  speed-up
+1st run (s)        0.037     0.023    1.589x
+2nd run (s)        0.024     0.023    1.078x
+index build time: 0.266s
+Existing index dropped: idx_gy_status_cover
+
+============================================================
+Q5 - Load tiers and environmental penalty of peaking
+============================================================
+EXPLAIN without index [Q5 - Load tiers and environmental penalty of peaking]:
+  hourly                   key=None  rows=51354681  Using where; Using temporary; Using filesort
+  <derived2>               key=<auto_key0>  rows=10  
+  cems_hourly_emissions    key=None  rows=51354681  Using temporary
+Running without index [Q5 - Load tiers and environmental penalty of peaking]...
+Creating indexes...
+EXPLAIN with index [Q5 - Load tiers and environmental penalty of peaking]:
+  <derived2>               key=None  rows=6456  Using where; Using temporary; Using filesort
+  hourly                   key=idx_cems_unit_year  rows=7955  Using where; Using index
+  cems_hourly_emissions    key=idx_cems_unit_year  rows=6456  Using index for group-by
+Running with index [Q5 - Load tiers and environmental penalty of peaking]...
+
+Q5 - Load tiers and environmental penalty of peaking - Q5 - Load tiers and environmental penalty of peaking
+                  before     after  speed-up
+1st run (s)       81.353    42.429    1.917x
+2nd run (s)       81.226    38.084    2.133x
+index build time: 102.725s
+Existing index dropped: idx_cems_unit_year
