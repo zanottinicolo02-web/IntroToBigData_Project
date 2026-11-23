@@ -34,7 +34,7 @@ QUERIES = {
     "Q3_PARETO_FACILITY": ("cems_hourly_emissions", Q.Q3_PARETO_FACILITY),
     "Q3_PARETO_COUNTY": ("cems_hourly_emissions", Q.Q3_PARETO_COUNTY),
     "Q3_HOTSPOTS": ("cems_hourly_emissions", Q.Q3_HOTSPOTS),
-    "Q4": ("cems_hourly_emissions", Q.Q4),
+    "Q4": ("generators", Q.Q4),
     "Q5": ("cems_hourly_emissions", Q.Q5)
 }
 
@@ -107,6 +107,8 @@ def main():
     parser = argparse.ArgumentParser(description="Run the Q2 / Q3 MongoDB pipelines")
     parser.add_argument("--only", nargs="+", choices=list(QUERIES), help="queries to run")
     parser.add_argument("--out", default="results", help="output folder for CSV / explain files")
+    parser.add_argument("--runs", type=int, default=3, help="times to run each query (first = cold)")
+    parser.add_argument("--limit", type=int, default=20, help="rows to print per query")
     args = parser.parse_args()
 
     out_dir = Path(args.out)

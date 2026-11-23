@@ -29,7 +29,7 @@ Q1_COMMON = [
     {"$group": {
         "_id": {
             "plant_id_eia": "$unit.plant_id_eia",
-            "year": {"$year": "$operating_datetime_utc"},
+            "year": {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
         },
         "_co2_sum": {"$sum": "$co2_mass_tons"}, "_co2_min": {"$min": "$co2_mass_tons"},
         "_so2_sum": {"$sum": "$so2_mass_lbs"},  "_so2_min": {"$min": "$so2_mass_lbs"},
@@ -155,7 +155,8 @@ Q2 = [
         "_id": {
             "plant_id_epa": "$unit.plant_id_epa",
             "emissions_unit_id_epa": "$unit.emissions_unit_id_epa",
-            "year": {"$year": "$operating_datetime_utc"},
+            "year": {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
+            "uyear": {"$year": "$operating_datetime_utc"},
             "md": {"$dateToString": {"date": "$operating_datetime_utc", "format": "%m%d"}},
             "h0": {"$eq": [{"$hour": "$operating_datetime_utc"}, 0]},
         },
@@ -172,7 +173,7 @@ Q2 = [
             "year": "$_id.year",
         },
         "days": {"$push": {
-            "md": "$_id.md", "h0": "$_id.h0",
+            "md": "$_id.md", "uyear": "$_id.uyear", "h0": "$_id.h0",
             "heat_mmbtu": "$heat_mmbtu", "mwh": "$mwh", "n_hours": "$n_hours",
         }},
     }},
@@ -212,7 +213,7 @@ Q2 = [
 
     {"$unwind": "$days"},
     {"$set": {
-        "dt_day": {"$concat": [{"$toString": "$_id.year"}, "$days.md"]},
+        "dt_day": {"$concat": [{"$toString": "$days.uyear"}, "$days.md"]},
         "ret_day": {"$dateToString": {"date": "$retirement_date", "format": "%Y%m%d"}},
         "ret_md": {"$dateToString": {"date": "$retirement_date", "format": "%m%d"}},
     }},
@@ -223,7 +224,7 @@ Q2 = [
 
     # TIMESTAMPDIFF(YEAR, datetime, retirement_date)
     {"$set": {"years_to_retirement": {"$subtract": [
-        {"$subtract": [{"$year": "$retirement_date"}, "$_id.year"]},
+        {"$subtract": [{"$year": "$retirement_date"}, "$days.uyear"]},
         {"$cond": [{"$or": [
             {"$lt": ["$ret_md", "$days.md"]},
             {"$and": [{"$eq": ["$ret_md", "$days.md"]}, {"$not": ["$days.h0"]}]},
@@ -402,6 +403,7 @@ Q4 = [
     # with summer and winter capacity present: $gt null is false for null and missing fields).
     {"$project": {
         "state": 1,
+        "lifetime_technology": {"$min": "$yearly.technology_description"},
         "yearly": {"$filter": {
             "input": "$yearly",
             "as": "y",
@@ -421,7 +423,7 @@ Q4 = [
     {"$group": {
         "_id": {
             "state": "$state",
-            "technology_description": "$yearly.technology_description",
+            "technology_description": "$lifetime_technology",
             "report_year": {"$year": "$yearly.report_date"},
         },
         "number_of_generators": {"$sum": 1},
@@ -489,7 +491,7 @@ Q5 = [
         "partitionBy": {
             "plant": "$unit.plant_id_epa",
             "unit": "$unit.emissions_unit_id_epa",
-            "year": {"$year": "$operating_datetime_utc"},
+            "year": {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
         },
         "output": {"max_load_mw": {"$max": "$gross_load_mw"}},
     }},
@@ -516,7 +518,7 @@ Q5 = [
     {"$group": {
         "_id": {
             "state": "$unit.state",
-            "year": {"$year": "$operating_datetime_utc"},
+            "year": {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
             "load_tier": "$load_tier",
         },
         "operating_hours": {"$sum": 1},
