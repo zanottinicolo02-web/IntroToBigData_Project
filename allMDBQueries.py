@@ -18,7 +18,7 @@ Collections used (see docSchema.js):
 # emissions are divided by total net generation across all fuels instead of only keeping 
 # single-fuel plants. 
 
-#db.cems_hourly_emissions.aggregate(Q1, allowDiskUse=True)
+# db.cems_hourly_emissions.aggregate(Q1, allowDiskUse=True)
 # Common part: one row per plant-year with total emissions, net generation
 # (all fuels) and dominant fuel.
 FUELS = ["coal", "gas", "oil"]
@@ -461,7 +461,7 @@ Q4 = [
     {"$sort": {"report_year": 1, "state": 1, "summer_derate_pct": -1}},
 ]
 
-# Q5: Real Capacity Factor & Environmental Penalties of Sub-Optimal Operation
+# Q5: Load Tiers & Environmental Penalties of Sub-Optimal Operation
 # Objective: Evaluate the real operating regimes of the emission units by classifying each operating 
 # hour according to the unit's gross load relative to the maximum load observed for that unit in that 
 # year (gross_load_mw / max_load_mw): peaking (< 20%), mid-merit (20–70%) and baseload (≥ 70%). The 
@@ -471,14 +471,9 @@ Q4 = [
 # the pollutant was measured count in both numerator and denominator). The goal is to check whether 
 # low-load operation is associated with higher specific emission rates compared to operation near 
 # full capacity. This is an association, not proof of causality, since peaking units are often a 
-# different technology from baseload ones (e.g. simple-cycle turbines vs. combined cycle). The query 
-# does not identify start-ups, and excludes hours with zero load or zero operating time. The MWh are 
+# different technology from baseload ones. The query excludes hours with zero load or zero operating time. The MWh are 
 # gross generation, so the intensities are not directly comparable with the net-generation intensities 
 # of Q1.
-# ============================================================
-# Q5: emissions per MWh by load tier
-# The SQL self-join (max load per unit and year) becomes a $setWindowFields.
-# ============================================================
 
 Q5 = [
     # 1. Only hours with load > 0. Does not change the per-unit maximum (discards rows that
