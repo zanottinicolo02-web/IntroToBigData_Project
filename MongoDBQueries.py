@@ -2,9 +2,9 @@
 Runs the MongoDB pipelines of allMDBQueries.py and reports results and timings.
 
 Usage:
-    python run_queries.py                          # run all queries once
-    python run_queries.py --only Q1 Q2             # selected queries
-    python run_queries.py --out results            # rows printed / output folder (CSV)
+    python MongoDBQueries.py                          # run all queries twice before indexes and twice after
+    python MongoDBQueries.py --only Q1 Q2             # selected queries
+    python MongoDBQueries.py --out results            # rows printed / output folder (CSV)
 
 Requirements: pip install pymongo
 """
@@ -19,6 +19,7 @@ from pathlib import Path
 
 # other libraries
 from pymongo import MongoClient
+from pymongo.errors import OperationFailure
 
 # queries kept in other file for better structure
 import allMDBQueries as Q
@@ -38,6 +39,55 @@ QUERIES = {
     "Q5": ("cems_hourly_emissions", Q.Q5)
 }
 
+INDEXES = [
+    ("plants", [("location", "2dsphere")]),
+    ("plants", [("state", 1), ("county_id_fips", 1)]),
+
+    ("generators", [("plant_id_eia", 1), ("generator_id", 1)]),
+    ("generators", [("state", 1)]),
+    ("generators", [("yearly.report_date", 1), ("yearly.technology_description", 1)]),
+
+    ("units", [("plant_id_epa", 1), ("emissions_unit_id_epa", 1)]),
+    ("units", [("plant_id_eia", 1)]),
+    ("units", [("state", 1), ("county_id_fips", 1)]),
+    ("units", [("location", "2dsphere")]),
+    ("units", [("generators.generator_id", 1)]),
+
+    ("monthly_generation_fuel", [("plant_id_eia", 1), ("report_date", 1)]),
+    ("monthly_generation_fuel", [("state", 1), ("report_date", 1)]),
+    ("monthly_generation_fuel", [("report_date", 1)]),
+
+    ("cems_hourly_emissions", [("unit.plant_id_eia", 1), ("operating_datetime_utc", 1)]),
+    ("cems_hourly_emissions", [("unit.state", 1), ("operating_datetime_utc", 1)]),
+
+    ("unit_monthly", [("plant_id_eia", 1), ("month", 1)]),
+    ("unit_monthly", [("state", 1), ("month", 1)]),
+    ("plant_year_emissions", [("state", 1), ("county_id_fips", 1), ("year", 1)]),
+    ("plant_year_emissions", [("location", "2dsphere")]),
+]
+
+
+# Index functionality
+def drop_indexes(db):
+    dropped = 0
+    for col, keys in INDEXES:
+        try:
+            db[col].drop_index(keys)
+            dropped += 1
+        except OperationFailure:
+            pass
+    print(f"dropped {dropped} of {len(INDEXES)} indexes")
+
+def create_indexes(db):
+    total = 0.0
+    for col, keys in INDEXES:
+        start = time.perf_counter()
+        db[col].create_index(keys)
+        secs = time.perf_counter() - start
+        total += secs
+        print(f"Created index ({col}: {keys}) in {secs:.2f}")
+    print(f"Total index build time: {total:.2f}")
+    return total
 
 # Execution
 def runOnce(db, coll, pipeline):
@@ -54,6 +104,24 @@ def runQ(db, name, runs):
         label = "cold" if i == 0 else "warm"
         print(f"  run {i + 1}/{runs} ({label}): {secs:8.2f} s  -> {len(rows):,} rows")
     return rows, times
+
+def run_all(db, names, runs, out_dir, limit, mode):
+    out_dir.mkdir(parents=True, exist_ok=True)
+    summary, results = {}, {}
+    for name in names:
+        print(f"\n=== {name} ({mode}) ===")
+        rows, times = runQ(db, name, runs)
+        results[name] = rows
+        summary[name] = times
+        writeCSV(rows, out_dir / f"{name}_{mode}.csv")
+        if not name.startswith("Q3_PARETO"):
+            printTable(rows, limit)
+    pareto = results.get("Q3_PARETO_FACILITY", []) + results.get("Q3_PARETO_COUNTY", [])
+    if pareto:
+        print(f"\n=== Q3 Pareto Test ({mode}) ===")
+        printTable(pareto, limit)
+        printParetoVerdict(pareto)
+    return summary, results
 
 
 # Output
@@ -104,10 +172,10 @@ def printParetoVerdict(rows):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run the Q2 / Q3 MongoDB pipelines")
+    parser = argparse.ArgumentParser(description="Run all MongoDB pipelines")
     parser.add_argument("--only", nargs="+", choices=list(QUERIES), help="queries to run")
     parser.add_argument("--out", default="results", help="output folder for CSV / explain files")
-    parser.add_argument("--runs", type=int, default=3, help="times to run each query (first = cold)")
+    parser.add_argument("--runs", type=int, default=2, help="times to run each query (first = cold)")
     parser.add_argument("--limit", type=int, default=20, help="rows to print per query")
     args = parser.parse_args()
 
@@ -117,28 +185,25 @@ def main():
 
     client = MongoClient(MONGO_URI)
     db = client[MONGO_DB]
-    summary, results = {}, {}
 
-    for name in names:
-        print(f"\n=== {name} ===")
-        rows, times = runQ(db, name, args.runs)
-        results[name] = rows
-        summary[name] = times
-        writeCSV(rows, out_dir / f"{name}.csv")
-        if not name.startswith("Q3_PARETO"):
-            printTable(rows, args.limit)
-
-    # the two Pareto levels are one table in the SQL (UNION ALL)
-    pareto = results.get("Q3_PARETO_FACILITY", []) + results.get("Q3_PARETO_COUNTY", [])
-    if pareto:
-        print("\n=== Q3 Pareto test ===")
-        printTable(pareto, args.limit)
-        printParetoVerdict(pareto)
+    drop_indexes(db)
+    no_index_summary, no_index_results = run_all(db, names, args.runs, out_dir, args.limit, "no_index")
+    create_indexes(db)
+    indexed_summary, indexed_results = run_all(db, names, args.runs, out_dir, args.limit, "indexed")
 
     print("\nTimings (seconds):")
-    print(f"  {'query':<24}{'first':>10}{'min':>10}{'median':>10}")
-    for name, times in summary.items():
-        print(f"  {name:<24}{times[0]:>10.2f}{min(times):>10.2f}{statistics.median(times):>10.2f}")
+    print(f"  {'query':<22}{'pass':<10}{'first':>10}{'min':>10}{'median':>10}")
+    for query in names:
+        for label, summary in (("no_index", no_index_summary), ("indexed", indexed_summary)):
+            times = summary[query]
+            print(f"  {query:<22}{label:<10}{times[0]:>10.2f}{min(times):>10.2f}{statistics.median(times):>10.2f}")
+
+    print("\nComparison (median, seconds):")
+    print(f"  {'query':<22}{'no index':>10}{'indexed':>10}{'speed-up':>10}")
+    for query in names:
+        before = statistics.median(no_index_summary[query])
+        after = statistics.median(indexed_summary[query])
+        print(f"  {query:<22}{before:>10.2f}{after:>10.2f}{before / after:>9.2f}x")
 
     client.close()
 

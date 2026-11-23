@@ -1,0 +1,477 @@
+PS C:\Users\spgil\OneDrive\Documents\RIT\fall-26\intro-to-big-data\IntroToBigData_Project> python3 .\MongoDBQueries.py
+dropped 19 of 19 indexes
+
+=== Q1_COMMON (no_index) ===
+  run 1/2 (cold):    89.33 s  -> 1,761 rows
+  run 2/2 (warm):    90.37 s  -> 1,761 rows
+  _id                                    total_co2_tons  total_so2_lbs    total_nox_lbs    generation                                                                 
+  -------------------------------------  --------------  ---------------  ---------------  ---------------------------------------------------------------------------
+  {'plant_id_eia': 1599, 'year': 2023}   63,193.0720     153,632.7440     114,143.4290     {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 59780.0}           
+  {'plant_id_eia': 2516, 'year': 2010}   3,053,542.4000  3,654,429.1430   4,689,163.9000   {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 4029476.9999999995}
+  {'plant_id_eia': 55170, 'year': 2010}  1,445,639.4340  14,595.9660      211,789.4300     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 3241127.0}         
+  {'plant_id_eia': 7914, 'year': 2015}   28,315.9570     285.9240         5,205.3190       {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 45013.0}           
+  {'plant_id_eia': 50797, 'year': 2005}  26,637.0750     268.9560         24,607.8310      {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 44037.002}         
+  {'plant_id_eia': 2554, 'year': 2005}   3,615,791.3750  39,593,962.6130  6,637,133.1000   {'_id': None, 'fuel_type': 'coal', 'net_generation_mwh': 3345526.0}        
+  {'plant_id_eia': 3169, 'year': 2005}   140,474.9040    716,955.8020     359,508.6120     {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 131044.0}          
+  {'plant_id_eia': 50385, 'year': 2015}  256,202.8990    2,587.0940       94,368.8980      {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 492690.0}          
+  {'plant_id_eia': 55600, 'year': 2018}  2,067.0000      23.5000          3,073.0000       {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 3544.0}            
+  {'plant_id_eia': 50292, 'year': 2010}  223,656.3840    2,258.6690       170,629.2840     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 430718.0}          
+  {'plant_id_eia': 55100, 'year': 2010}  232,582.9320    2,348.3280       72,533.2010      {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 511852.0}          
+  {'plant_id_eia': 2380, 'year': 2010}   5,481.0000      1,479.0000       81,153.6000      {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 3436.0}            
+  {'plant_id_eia': 2408, 'year': 2015}   352,421.8240    107,528.6060     310,076.1360     {'_id': None, 'fuel_type': 'coal', 'net_generation_mwh': 265286.001}       
+  {'plant_id_eia': 50006, 'year': 2020}  2,908,231.7390  32,845.1970      945,659.3630     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 5198544.006}       
+  {'plant_id_eia': 1619, 'year': 2005}   7,781,547.4000  65,036,651.5750  21,303,217.2000  {'_id': None, 'fuel_type': 'coal', 'net_generation_mwh': 8567300.0}        
+  {'plant_id_eia': 3168, 'year': 2025}   6,150.4000      15,335.2000      44,035.3000      {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 5753.0}            
+  {'plant_id_eia': 10805, 'year': 2025}                                   226,381.6650     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 163187.94700000001}
+  {'plant_id_eia': 1643, 'year': 2020}                                    1,882.7000       {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 156.0}             
+  {'plant_id_eia': 56798, 'year': 2020}  760,983.5060    7,655.2370       87,978.6390      {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 1766365.0}         
+  {'plant_id_eia': 2362, 'year': 2025}                                    4,073.6000       {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 416.0}             
+  ... 1,741 more rows (all of them are in the CSV)
+
+=== Q1 (no_index) ===
+  run 1/2 (cold):    85.07 s  -> 1,761 rows
+  run 2/2 (warm):    83.35 s  -> 1,761 rows
+  year   state  plant_name_eia                   fuel_type  co2_tons_per_mwh  so2_lbs_per_mwh  nox_lbs_per_mwh
+  -----  -----  -------------------------------  ---------  ----------------  ---------------  ---------------
+  2,005  NY     74th Street                      oil        977.5766          3,554.8026       2,432.7326     
+  2,005  NY     Bethlehem Energy Center          oil        17.0719           12.2851          12.7568        
+  2,005  NY     Waterside                        gas        2.4091            0.0244           3.0164         
+  2,005  PA     Westwood Generation LLC          coal       1.9430            3.1179           3.3568         
+  2,005  NY     S A Carlson                      coal       1.7502            49.3747          6.9029         
+  2,005  PA     Foster Wheeler Mt Carmel Cogen   coal       1.6527            3.0386           1.6308         
+  2,005  NY     WPS Power Niagara                coal       1.5566            6.4420           2.5454         
+  2,005  PA     Sunbury Generation LP            coal       1.4155            34.1436          3.5663         
+  2,005  NJ     Deepwater                        coal       1.3731            11.7352          4.4991         
+  2,005  ME     Bucksport Generation LLC         gas        1.3666            0.0380           0.7828         
+  2,005  PA     Brunot Island                    gas        1.3553            0.0137           0.6086         
+  2,005  NY     C R Huntley Generating Station   coal       1.3370            14.6745          3.2821         
+  2,005  PA     Eddystone Generating Station     coal       1.3318            5.0031           3.6789         
+  2,005  PA     Hunlock Power Station            coal       1.3029            30.1527          3.2081         
+  2,005  NH     Schiller                         coal       1.2982            15.8726          3.5771         
+  2,005  PA     Elrama Power Plant               coal       1.2621            4.0395           5.8858         
+  2,005  NY     Lovett                           coal       1.2543            11.4819          4.5615         
+  2,005  NJ     PSEG Linden Generating Station   gas        1.2205            0.2189           2.6158         
+  2,005  NJ     PSEG Sewaren Generating Station  oil        1.2136            3.8701           3.0143         
+  2,005  PA     Cromby Generating Station        coal       1.2084            9.8719           4.1650         
+  ... 1,741 more rows (all of them are in the CSV)
+
+=== Q1_AVG (no_index) ===
+  run 1/2 (cold):    83.34 s  -> 21 rows
+  run 2/2 (warm):    83.17 s  -> 21 rows
+  number_of_plants  year   fuel_type  avg_co2_tons_per_mwh  avg_so2_lbs_per_mwh  avg_nox_lbs_per_mwh
+  ----------------  -----  ---------  --------------------  -------------------  -------------------
+  66                2,005  coal       1.0189                15.0000              2.8535             
+  149               2,005  gas        0.4804                0.1126               0.4152             
+  64                2,005  oil        0.8956                6.8451               2.3544             
+  60                2,010  coal       1.0584                7.5436               2.2843             
+  166               2,010  gas        0.4862                0.0628               0.2716             
+  51                2,010  oil        1.3731                6.5728               5.0405             
+  34                2,015  coal       1.0832                5.8007               2.7135             
+  170               2,015  gas        0.4814                0.0406               0.2397             
+  46                2,015  oil        1.0538                4.6712               2.5711             
+  28                2,018  coal       1.1319                3.0525               1.3344             
+  184               2,018  gas        0.4590                0.0255               0.1755             
+  43                2,018  oil        1.1219                3.6915               3.1639             
+  20                2,020  coal       1.1655                2.8115               1.6703             
+  191               2,020  gas        0.4496                0.0119               0.1347             
+  37                2,020  oil        1.7890                1.8694               4.9004             
+  15                2,023  coal       1.2610                3.5977               1.0712             
+  178               2,023  gas        0.4492                0.0090               0.1260             
+  36                2,023  oil        1.7309                3.4256               4.1503             
+  12                2,025  coal       1.2241                3.6407               1.2073             
+  177               2,025  gas        0.4619                0.0422               0.1765             
+  ... 1 more rows (all of them are in the CSV)
+
+=== Q2 (no_index) ===
+  run 1/2 (cold):    22.22 s  -> 90 rows
+  run 2/2 (warm):    21.85 s  -> 90 rows
+  n_hours  technology               years_to_retirement  heat_rate_mmbtu_per_mwh  n_units
+  -------  -----------------------  -------------------  -----------------------  -------
+  12,076   Conventional Steam Coal  20                   11.4754                  2      
+  6,137    Conventional Steam Coal  19                   9.5692                   3      
+  13,013   Conventional Steam Coal  18                   8.9425                   3      
+  7,665    Conventional Steam Coal  17                   9.0584                   2      
+  3,479    Conventional Steam Coal  16                   10.6909                  1      
+  15,747   Conventional Steam Coal  15                   10.2418                  4      
+  21,169   Conventional Steam Coal  14                   8.6034                   7      
+  32,573   Conventional Steam Coal  13                   8.7669                   7      
+  14,278   Conventional Steam Coal  12                   9.1173                   5      
+  11,330   Conventional Steam Coal  11                   9.6958                   3      
+  8,354    Conventional Steam Coal  10                   9.4911                   4      
+  34,087   Conventional Steam Coal  9                    9.2271                   16     
+  117,316  Conventional Steam Coal  8                    9.3878                   24     
+  45,007   Conventional Steam Coal  7                    9.4682                   18     
+  24,465   Conventional Steam Coal  6                    10.0269                  11     
+  21,000   Conventional Steam Coal  5                    10.2478                  9      
+  24,369   Conventional Steam Coal  4                    9.3639                   15     
+  83,186   Conventional Steam Coal  3                    9.6554                   25     
+  27,318   Conventional Steam Coal  2                    9.6737                   18     
+  17,701   Conventional Steam Coal  1                    9.8339                   12     
+  ... 70 more rows (all of them are in the CSV)
+
+=== Q3_PARETO_FACILITY (no_index) ===
+  run 1/2 (cold):     1.50 s  -> 1 rows
+  run 2/2 (warm):     1.49 s  -> 1 rows
+
+=== Q3_PARETO_COUNTY (no_index) ===
+  run 1/2 (cold):     1.50 s  -> 1 rows
+  run 2/2 (warm):     1.49 s  -> 1 rows
+
+=== Q3_HOTSPOTS (no_index) ===
+  run 1/2 (cold):     1.53 s  -> 30 rows
+  run 2/2 (warm):     1.50 s  -> 30 rows
+  pollutant  hotspot_rank  county       state  total_emissions   units
+  ---------  ------------  -----------  -----  ----------------  -----
+  CO2        1             Indiana      PA     153,764,256.6090  tons 
+  CO2        2             Armstrong    PA     85,894,454.0140   tons 
+  CO2        3             Beaver       PA     70,642,505.6090   tons 
+  CO2        4             Queens       NY     62,385,982.8300   tons 
+  CO2        5             York         PA     54,706,891.9830   tons 
+  CO2        6             Northampton  PA     46,467,678.8950   tons 
+  CO2        7             Suffolk      NY     42,271,750.9630   tons 
+  CO2        8             Montour      PA     40,174,779.3470   tons 
+  CO2        9             Delaware     PA     35,630,525.5500   tons 
+  CO2        10            Greene       PA     32,379,737.1570   tons 
+  NOx        1             Indiana      PA     362,520,913.0450  lbs  
+  NOx        2             Beaver       PA     174,579,863.3480  lbs  
+  NOx        3             Armstrong    PA     158,848,454.6440  lbs  
+  NOx        4             York         PA     142,548,166.3680  lbs  
+  NOx        5             Greene       PA     126,101,201.9620  lbs  
+  NOx        6             Montour      PA     101,858,330.3740  lbs  
+  NOx        7             Bristol      MA     68,161,316.1670   lbs  
+  NOx        8             Queens       NY     67,438,841.8410   lbs  
+  NOx        9             Northampton  PA     64,374,159.5710   lbs  
+  NOx        10            Suffolk      NY     63,422,028.1160   lbs  
+  ... 10 more rows (all of them are in the CSV)
+
+=== Q4 (no_index) ===
+  run 1/2 (cold):     0.07 s  -> 349 rows
+  run 2/2 (warm):     0.04 s  -> 349 rows
+  number_of_generators  state  technology_description                  report_year  total_nominal_capacity_mw  total_summer_capacity_mw  total_winter_capacity_mw  summer_derate_pct
+  --------------------  -----  --------------------------------------  -----------  -------------------------  ------------------------  ------------------------  -----------------
+  6                     CT     Natural Gas Fired Combustion Turbine    2,005        275.8000                   216.0000                  274.0000                  21.1700          
+  12                    CT     Natural Gas Fired Combined Cycle        2,005        2,004.4000                 1,734.1000                1,960.6000                11.5500          
+  18                    CT     Petroleum Liquids                       2,005        1,569.0000                 1,422.5000                1,521.7000                6.5100           
+  8                     CT     Natural Gas Steam Turbine               2,005        918.0000                   911.9000                  932.6000                  2.2200           
+  6                     CT                                             2,005        577.6000                   538.0000                  550.1000                  2.2100           
+  1                     CT     Conventional Steam Coal                 2,005        400.0000                   374.3000                  376.3000                  0.5300           
+  8                     MA     Natural Gas Fired Combustion Turbine    2,005        252.2000                   184.9000                  230.2000                  19.6800          
+  40                    MA     Natural Gas Fired Combined Cycle        2,005        6,047.1000                 4,957.8000                5,872.5000                15.5800          
+  10                    MA                                             2,005        320.4000                   293.8000                  319.6000                  8.0700           
+  26                    MA     Petroleum Liquids                       2,005        3,178.0000                 2,906.8000                3,009.7000                3.4200           
+  7                     MA     Conventional Steam Coal                 2,005        1,590.2000                 1,554.9000                1,595.2000                2.5300           
+  16                    MA     Natural Gas Internal Combustion Engine  2,005        33.4000                    29.6000                   30.3000                   2.1200           
+  19                    MA     Natural Gas Steam Turbine               2,005        588.0000                   560.1000                  561.2000                  0.1900           
+  3                     ME     Natural Gas Fired Combustion Turbine    2,005        295.8000                   263.3000                  288.5000                  8.7300           
+  2                     ME     Wood/Wood Waste Biomass                 2,005        118.2000                   106.0000                  116.0000                  8.6200           
+  8                     ME     Natural Gas Fired Combined Cycle        2,005        1,377.0000                 1,250.0000                1,349.5000                7.3700           
+  20                    ME     Petroleum Liquids                       2,005        996.1000                   961.2000                  982.9000                  2.2100           
+  3                     ME     Natural Gas Steam Turbine               2,005        87.5000                    86.5000                   87.0000                   0.5700           
+  1                     ME                                             2,005        0.4000                     0.3000                    0.3000                    0.0000           
+  13                    NH     Petroleum Liquids                       2,005        106.9000                   94.0000                   113.4000                  17.0600          
+  ... 329 more rows (all of them are in the CSV)
+
+=== Q5 (no_index) ===
+  run 1/2 (cold):    64.64 s  -> 216 rows
+  run 2/2 (warm):    64.85 s  -> 216 rows
+  operating_hours  state  year   load_tier             nox_lbs_per_mwh  co2_tons_per_mwh
+  ---------------  -----  -----  --------------------  ---------------  ----------------
+  4,219            CT     2,000  1-Peaking (<20%)      4.0316           1.8749          
+  32,557           CT     2,000  2-Mid-merit (20-70%)  1.9126           0.9147          
+  54,658           CT     2,000  3-Baseload (>=70%)    2.0034           0.8477          
+  3,184            CT     2,005  1-Peaking (<20%)      5.3747           1.7177          
+  29,673           CT     2,005  2-Mid-merit (20-70%)  0.9942           0.7721          
+  55,521           CT     2,005  3-Baseload (>=70%)    0.9187           0.7596          
+  2,907            CT     2,010  1-Peaking (<20%)      5.1756           1.6797          
+  20,620           CT     2,010  2-Mid-merit (20-70%)  0.9529           0.7818          
+  58,104           CT     2,010  3-Baseload (>=70%)    0.3282           0.6035          
+  1,844            CT     2,015  1-Peaking (<20%)      4.1438           1.4549          
+  16,424           CT     2,015  2-Mid-merit (20-70%)  0.3926           0.6016          
+  64,082           CT     2,015  3-Baseload (>=70%)    0.1858           0.4994          
+  1,548            CT     2,018  1-Peaking (<20%)      3.1374           1.3190          
+  38,677           CT     2,018  2-Mid-merit (20-70%)  0.2097           0.5927          
+  54,794           CT     2,018  3-Baseload (>=70%)    0.1551           0.4761          
+  1,277            CT     2,020  1-Peaking (<20%)      4.5002           1.3679          
+  27,809           CT     2,020  2-Mid-merit (20-70%)  0.1649           0.5058          
+  66,922           CT     2,020  3-Baseload (>=70%)    0.0681           0.4410          
+  1,102            CT     2,023  1-Peaking (<20%)      3.9978           1.3075          
+  26,162           CT     2,023  2-Mid-merit (20-70%)  0.1179           0.4928          
+  ... 196 more rows (all of them are in the CSV)
+
+=== Q3 Pareto Test (no_index) ===
+  n_units  level     co2_top20_share  so2_top20_share  nox_top20_share
+  -------  --------  ---------------  ---------------  ---------------
+  378      facility  0.7862           0.9923           0.8710         
+  133      county    0.6607           0.9002           0.7699         
+
+  80/20 test (top 20% of the rows):
+    facility CO2    78.6%  below 80%
+    facility SO2    99.2%  PASS
+    facility NOX    87.1%  PASS
+    county   CO2    66.1%  below 80%
+    county   SO2    90.0%  PASS
+    county   NOX    77.0%  below 80%
+Created index (plants: [('location', '2dsphere')]) in 0.02
+Created index (plants: [('state', 1), ('county_id_fips', 1)]) in 0.01
+Created index (generators: [('plant_id_eia', 1), ('generator_id', 1)]) in 0.02
+Created index (generators: [('state', 1)]) in 0.01
+Created index (generators: [('yearly.report_date', 1), ('yearly.technology_description', 1)]) in 0.05
+Created index (units: [('plant_id_epa', 1), ('emissions_unit_id_epa', 1)]) in 0.01
+Created index (units: [('plant_id_eia', 1)]) in 0.01
+Created index (units: [('state', 1), ('county_id_fips', 1)]) in 0.01
+Created index (units: [('location', '2dsphere')]) in 0.01
+Created index (units: [('generators.generator_id', 1)]) in 0.01
+Created index (monthly_generation_fuel: [('plant_id_eia', 1), ('report_date', 1)]) in 0.18
+Created index (monthly_generation_fuel: [('state', 1), ('report_date', 1)]) in 0.19
+Created index (monthly_generation_fuel: [('report_date', 1)]) in 0.18
+Created index (cems_hourly_emissions: [('unit.plant_id_eia', 1), ('operating_datetime_utc', 1)]) in 0.12
+Created index (cems_hourly_emissions: [('unit.state', 1), ('operating_datetime_utc', 1)]) in 0.13
+Created index (unit_monthly: [('plant_id_eia', 1), ('month', 1)]) in 0.12
+Created index (unit_monthly: [('state', 1), ('month', 1)]) in 0.09
+Created index (plant_year_emissions: [('state', 1), ('county_id_fips', 1), ('year', 1)]) in 0.01
+Created index (plant_year_emissions: [('location', '2dsphere')]) in 0.02
+Total index build time: 1.19
+
+=== Q1_COMMON (indexed) ===
+  run 1/2 (cold):    17.96 s  -> 1,761 rows
+  run 2/2 (warm):    17.98 s  -> 1,761 rows
+  _id                                    total_co2_tons  total_so2_lbs   total_nox_lbs   generation                                                           
+  -------------------------------------  --------------  --------------  --------------  ---------------------------------------------------------------------
+  {'plant_id_eia': 1642, 'year': 2015}   29,595.4900     9,541.1070      29,268.1160     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 41237.0}     
+  {'plant_id_eia': 7912, 'year': 2015}   34,375.9580     347.1030        5,988.8740      {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 59031.0}     
+  {'plant_id_eia': 52106, 'year': 2018}                                  289,342.8530    {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 66129.0}     
+  {'plant_id_eia': 5083, 'year': 2010}   40,862.6260     1,067.0960      53,871.1500     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 62835.0}     
+  {'plant_id_eia': 55068, 'year': 2025}  616,183.9580    6,270.4150      132,706.5040    {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 1433435.0}   
+  {'plant_id_eia': 10641, 'year': 2015}  888,713.3590    4,580,536.4320  1,539,153.0550  {'_id': None, 'fuel_type': 'coal', 'net_generation_mwh': 602336.0}   
+  {'plant_id_eia': 52026, 'year': 2018}  36,621.8010     282.3610        17,003.8010     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 66877.0}     
+  {'plant_id_eia': 2398, 'year': 2020}   787,560.2520    7,951.5980      269,965.2360    {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 1677190.0}   
+  {'plant_id_eia': 55149, 'year': 2025}  2,407,141.6980  24,617.3190     283,448.0510    {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 5814808.0}   
+  {'plant_id_eia': 50879, 'year': 2010}  569,818.1670    918,360.3950    673,049.8260    {'_id': None, 'fuel_type': 'coal', 'net_generation_mwh': 353211.0}   
+  {'plant_id_eia': 542, 'year': 2023}                                    14,255.6000     {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 1298.0}      
+  {'plant_id_eia': 8007, 'year': 2018}   51,928.2000     1,103.4000      525,665.2000    {'_id': None, 'fuel_type': 'oil', 'net_generation_mwh': 43118.0}     
+  {'plant_id_eia': 60589, 'year': 2020}  2,769,719.7940  12,631.3730     266,639.0520    {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 7396747.016} 
+  {'plant_id_eia': 8002, 'year': 2010}   216,602.5750    637,525.9220    362,546.7160    {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 220752.0}    
+  {'plant_id_eia': 50776, 'year': 2020}                  79,164.1960     70,016.7190     {'_id': None, 'fuel_type': 'coal', 'net_generation_mwh': 60143.0}    
+  {'plant_id_eia': 54034, 'year': 2023}  13,079.0000     132.1460        6,852.7610      {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 24730.0}     
+  {'plant_id_eia': 3118, 'year': 2025}   4,171,903.9340  3,457,036.5130  2,695,006.1960  {'_id': None, 'fuel_type': 'coal', 'net_generation_mwh': 3910289.988}
+  {'plant_id_eia': 55026, 'year': 2010}  253,759.7080    2,562.1920      56,574.1300     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 522275.0}    
+  {'plant_id_eia': 55048, 'year': 2015}  591,887.2120    5,976.0820      126,640.2690    {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 1354120.0}   
+  {'plant_id_eia': 52026, 'year': 2005}  76,347.6500     2,055.1450      66,555.7000     {'_id': None, 'fuel_type': 'gas', 'net_generation_mwh': 234905.0}    
+  ... 1,741 more rows (all of them are in the CSV)
+
+=== Q1 (indexed) ===
+  run 1/2 (cold):    18.36 s  -> 1,761 rows
+  run 2/2 (warm):    18.44 s  -> 1,761 rows
+  year   state  plant_name_eia                   fuel_type  co2_tons_per_mwh  so2_lbs_per_mwh  nox_lbs_per_mwh
+  -----  -----  -------------------------------  ---------  ----------------  ---------------  ---------------
+  2,005  NY     74th Street                      oil        977.5766          3,554.8026       2,432.7326     
+  2,005  NY     Bethlehem Energy Center          oil        17.0719           12.2851          12.7568        
+  2,005  NY     Waterside                        gas        2.4091            0.0244           3.0164         
+  2,005  PA     Westwood Generation LLC          coal       1.9430            3.1179           3.3568         
+  2,005  NY     S A Carlson                      coal       1.7502            49.3747          6.9029         
+  2,005  PA     Foster Wheeler Mt Carmel Cogen   coal       1.6527            3.0386           1.6308         
+  2,005  NY     WPS Power Niagara                coal       1.5566            6.4420           2.5454         
+  2,005  PA     Sunbury Generation LP            coal       1.4155            34.1436          3.5663         
+  2,005  NJ     Deepwater                        coal       1.3731            11.7352          4.4991         
+  2,005  ME     Bucksport Generation LLC         gas        1.3666            0.0380           0.7828         
+  2,005  PA     Brunot Island                    gas        1.3553            0.0137           0.6086         
+  2,005  NY     C R Huntley Generating Station   coal       1.3370            14.6745          3.2821         
+  2,005  PA     Eddystone Generating Station     coal       1.3318            5.0031           3.6789         
+  2,005  PA     Hunlock Power Station            coal       1.3029            30.1527          3.2081         
+  2,005  NH     Schiller                         coal       1.2982            15.8726          3.5771         
+  2,005  PA     Elrama Power Plant               coal       1.2621            4.0395           5.8858         
+  2,005  NY     Lovett                           coal       1.2543            11.4819          4.5615         
+  2,005  NJ     PSEG Linden Generating Station   gas        1.2205            0.2189           2.6158         
+  2,005  NJ     PSEG Sewaren Generating Station  oil        1.2136            3.8701           3.0143         
+  2,005  PA     Cromby Generating Station        coal       1.2084            9.8719           4.1650         
+  ... 1,741 more rows (all of them are in the CSV)
+
+=== Q1_AVG (indexed) ===
+  run 1/2 (cold):    18.15 s  -> 21 rows
+  run 2/2 (warm):    17.93 s  -> 21 rows
+  number_of_plants  year   fuel_type  avg_co2_tons_per_mwh  avg_so2_lbs_per_mwh  avg_nox_lbs_per_mwh
+  ----------------  -----  ---------  --------------------  -------------------  -------------------
+  66                2,005  coal       1.0189                15.0000              2.8535             
+  149               2,005  gas        0.4804                0.1126               0.4152             
+  64                2,005  oil        0.8956                6.8451               2.3544             
+  60                2,010  coal       1.0584                7.5436               2.2843             
+  166               2,010  gas        0.4862                0.0628               0.2716             
+  51                2,010  oil        1.3731                6.5728               5.0405             
+  34                2,015  coal       1.0832                5.8007               2.7135             
+  170               2,015  gas        0.4814                0.0406               0.2397             
+  46                2,015  oil        1.0538                4.6712               2.5711             
+  28                2,018  coal       1.1319                3.0525               1.3344             
+  184               2,018  gas        0.4590                0.0255               0.1755             
+  43                2,018  oil        1.1219                3.6915               3.1639             
+  20                2,020  coal       1.1655                2.8115               1.6703             
+  191               2,020  gas        0.4496                0.0119               0.1347             
+  37                2,020  oil        1.7890                1.8694               4.9004             
+  15                2,023  coal       1.2610                3.5977               1.0712             
+  178               2,023  gas        0.4492                0.0090               0.1260             
+  36                2,023  oil        1.7309                3.4256               4.1503             
+  12                2,025  coal       1.2241                3.6407               1.2073             
+  177               2,025  gas        0.4619                0.0422               0.1765             
+  ... 1 more rows (all of them are in the CSV)
+
+=== Q2 (indexed) ===
+  run 1/2 (cold):    21.32 s  -> 90 rows
+  run 2/2 (warm):    21.86 s  -> 90 rows
+  n_hours  technology               years_to_retirement  heat_rate_mmbtu_per_mwh  n_units
+  -------  -----------------------  -------------------  -----------------------  -------
+  12,076   Conventional Steam Coal  20                   11.4754                  2      
+  6,137    Conventional Steam Coal  19                   9.5692                   3      
+  13,013   Conventional Steam Coal  18                   8.9425                   3      
+  7,665    Conventional Steam Coal  17                   9.0584                   2      
+  3,479    Conventional Steam Coal  16                   10.6909                  1      
+  15,747   Conventional Steam Coal  15                   10.2418                  4      
+  21,169   Conventional Steam Coal  14                   8.6034                   7      
+  32,573   Conventional Steam Coal  13                   8.7669                   7      
+  14,278   Conventional Steam Coal  12                   9.1173                   5      
+  11,330   Conventional Steam Coal  11                   9.6958                   3      
+  8,354    Conventional Steam Coal  10                   9.4911                   4      
+  34,087   Conventional Steam Coal  9                    9.2271                   16     
+  117,316  Conventional Steam Coal  8                    9.3878                   24     
+  45,007   Conventional Steam Coal  7                    9.4682                   18     
+  24,465   Conventional Steam Coal  6                    10.0269                  11     
+  21,000   Conventional Steam Coal  5                    10.2478                  9      
+  24,369   Conventional Steam Coal  4                    9.3639                   15     
+  83,186   Conventional Steam Coal  3                    9.6554                   25     
+  27,318   Conventional Steam Coal  2                    9.6737                   18     
+  17,701   Conventional Steam Coal  1                    9.8339                   12     
+  ... 70 more rows (all of them are in the CSV)
+
+=== Q3_PARETO_FACILITY (indexed) ===
+  run 1/2 (cold):     1.49 s  -> 1 rows
+  run 2/2 (warm):     1.49 s  -> 1 rows
+
+=== Q3_PARETO_COUNTY (indexed) ===
+  run 1/2 (cold):     1.55 s  -> 1 rows
+  run 2/2 (warm):     1.54 s  -> 1 rows
+
+=== Q3_HOTSPOTS (indexed) ===
+  run 1/2 (cold):     1.55 s  -> 30 rows
+  run 2/2 (warm):     1.54 s  -> 30 rows
+  pollutant  hotspot_rank  county       state  total_emissions   units
+  ---------  ------------  -----------  -----  ----------------  -----
+  CO2        1             Indiana      PA     153,764,256.6090  tons 
+  CO2        2             Armstrong    PA     85,894,454.0140   tons 
+  CO2        3             Beaver       PA     70,642,505.6090   tons 
+  CO2        4             Queens       NY     62,385,982.8300   tons 
+  CO2        5             York         PA     54,706,891.9830   tons 
+  CO2        6             Northampton  PA     46,467,678.8950   tons 
+  CO2        7             Suffolk      NY     42,271,750.9630   tons 
+  CO2        8             Montour      PA     40,174,779.3470   tons 
+  CO2        9             Delaware     PA     35,630,525.5500   tons 
+  CO2        10            Greene       PA     32,379,737.1570   tons 
+  NOx        1             Indiana      PA     362,520,913.0450  lbs  
+  NOx        2             Beaver       PA     174,579,863.3480  lbs  
+  NOx        3             Armstrong    PA     158,848,454.6440  lbs  
+  NOx        4             York         PA     142,548,166.3680  lbs  
+  NOx        5             Greene       PA     126,101,201.9620  lbs  
+  NOx        6             Montour      PA     101,858,330.3740  lbs  
+  NOx        7             Bristol      MA     68,161,316.1670   lbs  
+  NOx        8             Queens       NY     67,438,841.8410   lbs  
+  NOx        9             Northampton  PA     64,374,159.5710   lbs  
+  NOx        10            Suffolk      NY     63,422,028.1160   lbs  
+  ... 10 more rows (all of them are in the CSV)
+
+=== Q4 (indexed) ===
+  run 1/2 (cold):     0.04 s  -> 349 rows
+  run 2/2 (warm):     0.03 s  -> 349 rows
+  number_of_generators  state  technology_description                  report_year  total_nominal_capacity_mw  total_summer_capacity_mw  total_winter_capacity_mw  summer_derate_pct
+  --------------------  -----  --------------------------------------  -----------  -------------------------  ------------------------  ------------------------  -----------------
+  6                     CT     Natural Gas Fired Combustion Turbine    2,005        275.8000                   216.0000                  274.0000                  21.1700          
+  12                    CT     Natural Gas Fired Combined Cycle        2,005        2,004.4000                 1,734.1000                1,960.6000                11.5500          
+  18                    CT     Petroleum Liquids                       2,005        1,569.0000                 1,422.5000                1,521.7000                6.5100           
+  8                     CT     Natural Gas Steam Turbine               2,005        918.0000                   911.9000                  932.6000                  2.2200           
+  6                     CT                                             2,005        577.6000                   538.0000                  550.1000                  2.2100           
+  1                     CT     Conventional Steam Coal                 2,005        400.0000                   374.3000                  376.3000                  0.5300           
+  8                     MA     Natural Gas Fired Combustion Turbine    2,005        252.2000                   184.9000                  230.2000                  19.6800          
+  40                    MA     Natural Gas Fired Combined Cycle        2,005        6,047.1000                 4,957.8000                5,872.5000                15.5800          
+  10                    MA                                             2,005        320.4000                   293.8000                  319.6000                  8.0700           
+  26                    MA     Petroleum Liquids                       2,005        3,178.0000                 2,906.8000                3,009.7000                3.4200           
+  7                     MA     Conventional Steam Coal                 2,005        1,590.2000                 1,554.9000                1,595.2000                2.5300           
+  16                    MA     Natural Gas Internal Combustion Engine  2,005        33.4000                    29.6000                   30.3000                   2.1200           
+  19                    MA     Natural Gas Steam Turbine               2,005        588.0000                   560.1000                  561.2000                  0.1900           
+  3                     ME     Natural Gas Fired Combustion Turbine    2,005        295.8000                   263.3000                  288.5000                  8.7300           
+  2                     ME     Wood/Wood Waste Biomass                 2,005        118.2000                   106.0000                  116.0000                  8.6200           
+  8                     ME     Natural Gas Fired Combined Cycle        2,005        1,377.0000                 1,250.0000                1,349.5000                7.3700           
+  20                    ME     Petroleum Liquids                       2,005        996.1000                   961.2000                  982.9000                  2.2100           
+  3                     ME     Natural Gas Steam Turbine               2,005        87.5000                    86.5000                   87.0000                   0.5700           
+  1                     ME                                             2,005        0.4000                     0.3000                    0.3000                    0.0000           
+  13                    NH     Petroleum Liquids                       2,005        106.9000                   94.0000                   113.4000                  17.0600          
+  ... 329 more rows (all of them are in the CSV)
+
+=== Q5 (indexed) ===
+  run 1/2 (cold):    68.02 s  -> 216 rows
+  run 2/2 (warm):    67.31 s  -> 216 rows
+  operating_hours  state  year   load_tier             nox_lbs_per_mwh  co2_tons_per_mwh
+  ---------------  -----  -----  --------------------  ---------------  ----------------
+  4,219            CT     2,000  1-Peaking (<20%)      4.0316           1.8749          
+  32,557           CT     2,000  2-Mid-merit (20-70%)  1.9126           0.9147          
+  54,658           CT     2,000  3-Baseload (>=70%)    2.0034           0.8477          
+  3,184            CT     2,005  1-Peaking (<20%)      5.3747           1.7177          
+  29,673           CT     2,005  2-Mid-merit (20-70%)  0.9942           0.7721          
+  55,521           CT     2,005  3-Baseload (>=70%)    0.9187           0.7596          
+  2,907            CT     2,010  1-Peaking (<20%)      5.1756           1.6797          
+  20,620           CT     2,010  2-Mid-merit (20-70%)  0.9529           0.7818          
+  58,104           CT     2,010  3-Baseload (>=70%)    0.3282           0.6035          
+  1,844            CT     2,015  1-Peaking (<20%)      4.1438           1.4549          
+  16,424           CT     2,015  2-Mid-merit (20-70%)  0.3926           0.6016          
+  64,082           CT     2,015  3-Baseload (>=70%)    0.1858           0.4994          
+  1,548            CT     2,018  1-Peaking (<20%)      3.1374           1.3190          
+  38,677           CT     2,018  2-Mid-merit (20-70%)  0.2097           0.5927          
+  54,794           CT     2,018  3-Baseload (>=70%)    0.1551           0.4761          
+  1,277            CT     2,020  1-Peaking (<20%)      4.5002           1.3679          
+  27,809           CT     2,020  2-Mid-merit (20-70%)  0.1649           0.5058          
+  66,922           CT     2,020  3-Baseload (>=70%)    0.0681           0.4410          
+  1,102            CT     2,023  1-Peaking (<20%)      3.9978           1.3075          
+  26,162           CT     2,023  2-Mid-merit (20-70%)  0.1179           0.4928          
+  ... 196 more rows (all of them are in the CSV)
+
+=== Q3 Pareto Test (indexed) ===
+  n_units  level     co2_top20_share  so2_top20_share  nox_top20_share
+  -------  --------  ---------------  ---------------  ---------------
+  378      facility  0.7862           0.9923           0.8710         
+  133      county    0.6607           0.9002           0.7699         
+
+  80/20 test (top 20% of the rows):
+    facility CO2    78.6%  below 80%
+    facility SO2    99.2%  PASS
+    facility NOX    87.1%  PASS
+    county   CO2    66.1%  below 80%
+    county   SO2    90.0%  PASS
+    county   NOX    77.0%  below 80%
+
+Timings (seconds):
+  query                 pass           first       min    median
+  Q1_COMMON             no_index       89.33     89.33     89.85
+  Q1_COMMON             indexed        17.96     17.96     17.97
+  Q1                    no_index       85.07     83.35     84.21
+  Q1                    indexed        18.36     18.36     18.40
+  Q1_AVG                no_index       83.34     83.17     83.26
+  Q1_AVG                indexed        18.15     17.93     18.04
+  Q2                    no_index       22.22     21.85     22.04
+  Q2                    indexed        21.32     21.32     21.59
+  Q3_PARETO_FACILITY    no_index        1.50      1.49      1.50
+  Q3_PARETO_FACILITY    indexed         1.49      1.49      1.49
+  Q3_PARETO_COUNTY      no_index        1.50      1.49      1.49
+  Q3_PARETO_COUNTY      indexed         1.55      1.54      1.54
+  Q3_HOTSPOTS           no_index        1.53      1.50      1.51
+  Q3_HOTSPOTS           indexed         1.55      1.54      1.54
+  Q4                    no_index        0.07      0.04      0.05
+  Q4                    indexed         0.04      0.03      0.03
+  Q5                    no_index       64.64     64.64     64.74
+  Q5                    indexed        68.02     67.31     67.67
+
+Comparison (median, seconds):
+  query                   no index   indexed  speed-up
+  Q1_COMMON                  89.85     17.97     5.00x
+  Q1                         84.21     18.40     4.58x
+  Q1_AVG                     83.26     18.04     4.62x
+  Q2                         22.04     21.59     1.02x
+  Q3_PARETO_FACILITY          1.50      1.49     1.00x
+  Q3_PARETO_COUNTY            1.49      1.54     0.97x
+  Q3_HOTSPOTS                 1.51      1.54     0.98x
+  Q4                          0.05      0.03     1.49x
+  Q5                         64.74     67.67     0.96x
