@@ -291,6 +291,10 @@ FROM ranked WHERE nox_rank <= 10
 ORDER BY pollutant, hotspot_rank;
 """
 
+Q3_PARETO, Q3_HOTSPOTS = [
+    part.replace("-- Pareto test", "").strip()
+    for part in Q3.split("-- Top 10 hotspots")
+]
 
 
 # Q4: seasonal capacity margin. Summer vs winter capacity of the operating thermal
@@ -390,26 +394,17 @@ BENCHMARKS = {
         index_columns=("plant_id_epa, emissions_unit_id_epa, year, heat_content_mmbtu, gross_load_mw, operating_time_hours"),
     ),
     "q3": dict(
-        title="Q3 - Spatial Hotspots",
-        sql=Q3,
-        #PROBLEMA CON GLI INDICI
-        indexes=[
-        {
-            "table": "cems_hourly_emissions",
-            "index_name": "idx_cems_facility_emissions",
-            "index_columns": (
-                "plant_id_epa, state, co2_mass_tons, so2_mass_lbs, nox_mass_lbs"
-            ),
-        },
-        {
-            "table": "cems_hourly_emissions",
-            "index_name": "idx_cems_plant",
-            "index_columns": (
-                "plant_id_eia, co2_mass_tons, so2_mass_lbs, nox_mass_lbs"
-            ),
-        },
-        ],
-    ),
+    title="Q3 - Spatial Hotspots",
+    queries=[("Pareto test", Q3_PARETO), ("Top 10 hotspots", Q3_HOTSPOTS)],
+    indexes=[
+        dict(table="cems_hourly_emissions",
+             index_name="idx_cems_facility_emissions",
+             index_columns="plant_id_epa, state, co2_mass_tons, so2_mass_lbs, nox_mass_lbs"),
+        dict(table="cems_hourly_emissions",
+             index_name="idx_cems_plant",
+             index_columns="plant_id_eia, co2_mass_tons, so2_mass_lbs, nox_mass_lbs"),
+    ],
+),
     "q4": dict(
         title="Q4 - Seasonal capacity margins",
         sql=Q4,
@@ -443,20 +438,6 @@ def connect():
         password=getpass.getpass("MySQL password: "),
         database="pudl_northeast", autocommit=True,
     )
-
-
-def drop_index(cur, b):
-    try:
-        cur.execute(f"DROP INDEX {b['index_name']} ON {b['table']}")
-        print("Existing index dropped.")
-    except mysql.connector.Error:
-        pass  # the index does not exist: the baseline is clean
-
-
-def create_index(cur, b):
-    start = time.perf_counter()
-    cur.execute(f"CREATE INDEX {b['index_name']} ON {b['table']} ({b['index_columns']})")
-    return time.perf_counter() - start
 
 
 def show_plan(db, sql):
@@ -493,30 +474,66 @@ def print_table(cur, sql, title):
         print("  ".join(f"{str(v):<16}" for v in row))
 
 
+def get_indexes(b):
+    """Always returns a list of indexes (supports both config formats)."""
+    if "indexes" in b:
+        return b["indexes"]
+    return [dict(table=b["table"], index_name=b["index_name"],
+                 index_columns=b["index_columns"])]
+
+
+def get_queries(b):
+    """Always returns a list of (label, sql)."""
+    if "queries" in b:
+        return b["queries"]
+    return [(b["title"], b["sql"])]
+
+
+def drop_indexes(cur, b):
+    for idx in get_indexes(b):
+        try:
+            cur.execute(f"DROP INDEX {idx['index_name']} ON {idx['table']}")
+            print(f"Existing index dropped: {idx['index_name']}")
+        except mysql.connector.Error:
+            pass  # the index does not exist: the baseline is clean
+
+
+def create_indexes(cur, b):
+    start = time.perf_counter()
+    for idx in get_indexes(b):
+        cur.execute(f"CREATE INDEX {idx['index_name']} ON {idx['table']} ({idx['index_columns']})")
+    return time.perf_counter() - start  # total build time of all the indexes
+
+
 def run_benchmark(db, b):
     cur = db.cursor()
+    queries = get_queries(b)
     print(f"\n{'=' * 60}\n{b['title']}\n{'=' * 60}")
 
-    drop_index(cur, b)
-    print("EXPLAIN without index:")
-    show_plan(db, b["sql"])
-    print("Running without index...")
-    before = time_query(cur, b["sql"])
+    drop_indexes(cur, b)
+    before = {}
+    for label, sql in queries:
+        print(f"EXPLAIN without index [{label}]:")
+        show_plan(db, sql)
+        print(f"Running without index [{label}]...")
+        before[label] = time_query(cur, sql)
 
-    print("Creating index...")
-    build_time = create_index(cur, b)
+    print("Creating indexes...")
+    build_time = create_indexes(cur, b)
 
-    print("EXPLAIN with index:")
-    show_plan(db, b["sql"])
-    print("Running with index...")
-    after = time_query(cur, b["sql"])
+    after = {}
+    for label, sql in queries:
+        print(f"EXPLAIN with index [{label}]:")
+        show_plan(db, sql)
+        print(f"Running with index [{label}]...")
+        after[label] = time_query(cur, sql)
 
-    print_summary(b["title"], before, after, build_time)
+    for label, _ in queries:
+        print_summary(f"{b['title']} - {label}", before[label], after[label], build_time)
     if "extra_sql" in b:
         print_table(cur, b["extra_sql"], b["extra_title"])
 
-    drop_index(cur, b)
-
+    drop_indexes(cur, b)
 
 def main():
     names = sys.argv[1:] or list(BENCHMARKS)
