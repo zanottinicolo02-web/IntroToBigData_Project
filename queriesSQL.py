@@ -378,9 +378,37 @@ BENCHMARKS = {
         index_name="idx_cems_plant_year",
         # Covering index, already ordered by the GROUP BY columns: read this narrow
         # index instead of the full table (moderate speed-up expected).
-        index_columns="plant_id_eia, year, co2_mass_tons, so2_mass_lbs, nox_mass_lbs",
+        index_columns=("plant_id_eia, year, co2_mass_tons, so2_mass_lbs, nox_mass_lbs"),
         extra_sql=Q1_AVG,
         extra_title="Average emissions per MWh (by year and fuel)",
+    ),
+    "q2": dict(
+        title="Q2 - Heat Rate Degradation vs. Retirement Date",
+        sql=Q2,
+        table="cems_hourly_emissions",
+        index_name="idx_cems_heat_rate",
+        index_columns=("plant_id_epa, emissions_unit_id_epa, year, heat_content_mmbtu, gross_load_mw, operating_time_hours"),
+    ),
+    "q3": dict(
+        title="Q3 - Spatial Hotspots",
+        sql=Q3,
+        #PROBLEMA CON GLI INDICI
+        indexes=[
+        {
+            "table": "cems_hourly_emissions",
+            "index_name": "idx_cems_facility_emissions",
+            "index_columns": (
+                "plant_id_epa, state, co2_mass_tons, so2_mass_lbs, nox_mass_lbs"
+            ),
+        },
+        {
+            "table": "cems_hourly_emissions",
+            "index_name": "idx_cems_plant",
+            "index_columns": (
+                "plant_id_eia, co2_mass_tons, so2_mass_lbs, nox_mass_lbs"
+            ),
+        },
+        ],
     ),
     "q4": dict(
         title="Q4 - Seasonal capacity margins",
