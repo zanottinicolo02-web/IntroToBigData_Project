@@ -157,7 +157,7 @@ Q1_AVG = Q1_COMMON + [
 #   db.generators.aggregate(Q4)
 
 Q4 = [
-    # 1. Pre-filter: generators with at least one operational year (OP).
+    # 1. Generators with at least one operational year (OP).
     {"$match": {"yearly.operational_status_code": "OP"}},
 
     # 2. From the embedded "yearly" array, keep only valid entries (operational, thermal,
@@ -233,11 +233,10 @@ Q4 = [
 # without modify the dimension of the documents. It will compute the conditions using the RAM
 
 Q5 = [
-    # 1. Only hours with load > 0. Does not change the per-unit maximum (discards rows that
-    # would be discarded anyway), but reduces the documents entering the window stage.
+    # 1. Only hours with load > 0, it reduces the documents entering the window stage.
     {"$match": {"gross_load_mw": {"$gt": 0}}},
 
-    # 2. Maximum load of each unit in each year (no "window" = entire partition).
+    # 2. Maximum load of each unit in each year.
     # Replaces the self-join with the MAX(gross_load_mw) subquery from SQL.
     {"$setWindowFields": {
         "partitionBy": {
