@@ -29,7 +29,7 @@ Q1_COMMON = [
     {"$group": {
         "_id": {
             "plant_id_eia": "$unit.plant_id_eia",
-            "year": {"$year": "$operating_datetime_utc"},
+            {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
         },
         "_co2_sum": {"$sum": "$co2_mass_tons"}, "_co2_min": {"$min": "$co2_mass_tons"},
         "_so2_sum": {"$sum": "$so2_mass_lbs"},  "_so2_min": {"$min": "$so2_mass_lbs"},
@@ -511,7 +511,7 @@ Q5 = [
     {"$group": {
         "_id": {
             "state": "$unit.state",
-            "year": {"$year": "$operating_datetime_utc"},
+            {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
             "load_tier": "$load_tier",
         },
         "operating_hours": {"$sum": 1},
