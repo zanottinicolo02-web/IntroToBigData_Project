@@ -151,24 +151,38 @@ ORDER BY generation.year, generation.fuel_type;
 # Output: state, technology, year, number of generators, nominal/summer/winter capacity
 # and summer derating (%). Ordered by year, state and derating (highest first).
 Q4 = """
+WITH gen_lifetime AS (
+    SELECT plant_id_eia, generator_id,
+          MIN(technology_description) AS lifetime_technology
+    FROM generator_yearly
+   GROUP BY plant_id_eia, generator_id
+)
 SELECT plants.state,
-       generator_yearly.technology_description,
+       r.lifetime_technology AS technology_description,
        YEAR(generator_yearly.report_date) AS report_year,
        COUNT(*) AS number_of_generators,
-       ROUND(SUM(generator_yearly.capacity_mw), 1)        AS total_nominal_capacity_mw,
-       ROUND(SUM(generator_yearly.summer_capacity_mw), 1) AS total_summer_capacity_mw,
-       ROUND(SUM(generator_yearly.winter_capacity_mw), 1) AS total_winter_capacity_mw,
-       ROUND((SUM(generator_yearly.winter_capacity_mw) - SUM(generator_yearly.summer_capacity_mw))
-             / SUM(generator_yearly.winter_capacity_mw) * 100, 2) AS summer_derate_pct
+       ROUND(SUM(generator_yearly.capacity_mw), 1)       AS
+total_nominal_capacity_mw,
+       ROUND(SUM(generator_yearly.summer_capacity_mw), 1) AS
+total_summer_capacity_mw,
+       ROUND(SUM(generator_yearly.winter_capacity_mw), 1) AS
+total_winter_capacity_mw,
+       ROUND((SUM(generator_yearly.winter_capacity_mw) -
+SUM(generator_yearly.summer_capacity_mw))/ SUM(generator_yearly.winter_capacity_mw) * 100, 2) AS
+summer_derate_pct
+
 FROM generator_yearly
 JOIN plants ON plants.plant_id_eia = generator_yearly.plant_id_eia
+JOIN gen_lifetime r
+ ON r.plant_id_eia = generator_yearly.plant_id_eia
+ AND r.generator_id = generator_yearly.generator_id
 WHERE generator_yearly.operational_status_code = 'OP'
   AND generator_yearly.fuel_type_code_pudl IN ('coal', 'gas', 'oil')
   AND generator_yearly.summer_capacity_mw IS NOT NULL
   AND generator_yearly.winter_capacity_mw IS NOT NULL
-GROUP BY plants.state, generator_yearly.technology_description, YEAR(generator_yearly.report_date)
+GROUP BY plants.state, r.lifetime_technology, YEAR(generator_yearly.report_date)
 HAVING SUM(generator_yearly.winter_capacity_mw) > 0
-ORDER BY report_year, plants.state, summer_derate_pct DESC
+ORDER BY report_year, plants.state, summer_derate_pct DESC;
 """
 
 # Q5: emissions per MWh by load tier. Each operating hour is classified by the unit's
