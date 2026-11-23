@@ -2,10 +2,13 @@
 Phase II queries (1, 4, 5), run without and with the proposed index.
 
 Can run just the selected query 
-    python queries_1_4_5.py          # all queries
-    python queries_1_4_5.py q1       # only Q1
-    python queries_1_4_5.py q5       # only Q5
-    python queries_1_4_5.py q4       # only Q4
+    python queriesSQL.py          # all queries
+    python queriesSQL.py q1       # only Q1
+    python queriesSQL.py q2       # only Q2
+    python queriesSQL.py q3       # only Q3
+    python queriesSQL.py q4       # only Q4
+    python queriesSQL.py q5       # only Q5
+    
 
 Each benchmark: drop the index (clean baseline) -> EXPLAIN + timing without index -> create the index 
     -> EXPLAIN + timing with index -> drop the index again
@@ -143,6 +146,151 @@ JOIN generation
 GROUP BY generation.year, generation.fuel_type
 ORDER BY generation.year, generation.fuel_type;
 """
+
+# Q2: Heat Rate Degradation vs. Retirement Date
+
+Q2 = """
+WITH gen_lifetime AS (
+    SELECT plant_id_eia, generator_id,
+           MIN(generator_retirement_date) AS lifetime_retirement_date,
+           MIN(technology_description)    AS lifetime_technology
+    FROM generator_yearly
+    GROUP BY plant_id_eia, generator_id
+)
+SELECT u.technology,
+       TIMESTAMPDIFF(YEAR, c.operating_datetime_utc, u.retirement_date) AS years_to_retirement,
+       SUM(c.heat_content_mmbtu) / SUM(c.gross_load_mw * c.operating_time_hours) AS heat_rate_mmbtu_per_mwh,
+       COUNT(*) AS n_hours,
+       COUNT(DISTINCT c.plant_id_epa, c.emissions_unit_id_epa) AS n_units
+FROM cems_hourly_emissions c
+JOIN (
+    SELECT x.plant_id_epa,
+           x.emissions_unit_id_epa,
+           YEAR(g.report_date) AS report_year,
+           MIN(r.lifetime_technology)      AS technology,
+           MIN(r.lifetime_retirement_date) AS retirement_date
+    FROM epa_eia_crosswalk x
+    JOIN generator_yearly g
+      ON x.plant_id_eia = g.plant_id_eia
+     AND x.generator_id = g.generator_id
+    JOIN gen_lifetime r
+      ON r.plant_id_eia = g.plant_id_eia
+     AND r.generator_id = g.generator_id
+    GROUP BY x.plant_id_epa, x.emissions_unit_id_epa, YEAR(g.report_date)
+    HAVING COUNT(DISTINCT r.lifetime_technology) = 1
+) u
+  ON c.plant_id_epa = u.plant_id_epa
+ AND c.emissions_unit_id_epa = u.emissions_unit_id_epa
+ AND c.year = u.report_year
+WHERE c.heat_content_mmbtu > 0
+  AND c.gross_load_mw > 0
+  AND c.operating_time_hours > 0
+  AND u.retirement_date IS NOT NULL
+  AND u.retirement_date >= c.operating_datetime_utc
+GROUP BY u.technology, years_to_retirement
+ORDER BY u.technology, years_to_retirement DESC;
+"""
+
+
+# Q3: Spatial Hotspots
+Q3 = """
+-- Pareto test
+WITH facility_totals AS (
+    SELECT plant_id_epa, state,
+           SUM(co2_mass_tons) AS total_co2_tons,
+           SUM(so2_mass_lbs)  AS total_so2_lbs,
+           SUM(nox_mass_lbs)  AS total_nox_lbs
+    FROM cems_hourly_emissions
+    GROUP BY plant_id_epa, state
+),
+facility_ranked AS (
+    SELECT total_co2_tons, ROW_NUMBER() OVER (ORDER BY total_co2_tons DESC) AS co2_rank,
+           total_so2_lbs,  ROW_NUMBER() OVER (ORDER BY total_so2_lbs DESC)  AS so2_rank,
+           total_nox_lbs,  ROW_NUMBER() OVER (ORDER BY total_nox_lbs DESC)  AS nox_rank,
+           COUNT(*) OVER () AS n_units
+    FROM facility_totals
+),
+plant_totals AS (
+    SELECT plant_id_eia,
+           SUM(co2_mass_tons) AS total_co2_mass_tons,
+           SUM(so2_mass_lbs)  AS total_so2_mass_lbs,
+           SUM(nox_mass_lbs)  AS total_nox_mass_lbs
+    FROM cems_hourly_emissions
+    WHERE plant_id_eia IS NOT NULL
+    GROUP BY plant_id_eia
+),
+county_totals AS (
+    SELECT p.county_id_fips,
+           p.county,
+           p.state,
+           SUM(pt.total_co2_mass_tons) AS total_co2_tons,
+           SUM(pt.total_so2_mass_lbs)  AS total_so2_lbs,
+           SUM(pt.total_nox_mass_lbs)  AS total_nox_lbs
+    FROM plant_totals pt
+    JOIN plants p ON pt.plant_id_eia = p.plant_id_eia
+    GROUP BY p.county_id_fips, p.county, p.state
+),
+county_ranked AS (
+    SELECT total_co2_tons, ROW_NUMBER() OVER (ORDER BY total_co2_tons DESC) AS co2_rank,
+           total_so2_lbs,  ROW_NUMBER() OVER (ORDER BY total_so2_lbs DESC)  AS so2_rank,
+           total_nox_lbs,  ROW_NUMBER() OVER (ORDER BY total_nox_lbs DESC)  AS nox_rank,
+           COUNT(*) OVER () AS n_units
+    FROM county_totals
+)
+SELECT 'facility' AS level,
+       MAX(n_units) AS n_units,
+       CAST(SUM(CASE WHEN co2_rank <= n_units * 0.20 THEN total_co2_tons END) / SUM(total_co2_tons) AS DECIMAL(5,4)) AS co2_top20_share,
+       CAST(SUM(CASE WHEN so2_rank <= n_units * 0.20 THEN total_so2_lbs  END) / SUM(total_so2_lbs)  AS DECIMAL(5,4)) AS so2_top20_share,
+       CAST(SUM(CASE WHEN nox_rank <= n_units * 0.20 THEN total_nox_lbs  END) / SUM(total_nox_lbs)  AS DECIMAL(5,4)) AS nox_top20_share
+FROM facility_ranked
+UNION ALL
+SELECT 'county',
+       MAX(n_units),
+       CAST(SUM(CASE WHEN co2_rank <= n_units * 0.20 THEN total_co2_tons END) / SUM(total_co2_tons) AS DECIMAL(5,4)),
+       CAST(SUM(CASE WHEN so2_rank <= n_units * 0.20 THEN total_so2_lbs  END) / SUM(total_so2_lbs)  AS DECIMAL(5,4)),
+       CAST(SUM(CASE WHEN nox_rank <= n_units * 0.20 THEN total_nox_lbs  END) / SUM(total_nox_lbs)  AS DECIMAL(5,4))
+FROM county_ranked;
+
+-- Top 10 hotspots
+WITH plant_totals AS (
+    SELECT plant_id_eia,
+           SUM(co2_mass_tons) AS total_co2_mass_tons,
+           SUM(so2_mass_lbs)  AS total_so2_mass_lbs,
+           SUM(nox_mass_lbs)  AS total_nox_mass_lbs
+    FROM cems_hourly_emissions
+    WHERE plant_id_eia IS NOT NULL
+    GROUP BY plant_id_eia
+),
+county_totals AS (
+    SELECT p.county_id_fips,
+           p.county,
+           p.state,
+           SUM(pt.total_co2_mass_tons) AS total_co2_tons,
+           SUM(pt.total_so2_mass_lbs)  AS total_so2_lbs,
+           SUM(pt.total_nox_mass_lbs)  AS total_nox_lbs
+    FROM plant_totals pt
+    JOIN plants p ON pt.plant_id_eia = p.plant_id_eia
+    GROUP BY p.county_id_fips, p.county, p.state
+),
+ranked AS (
+    SELECT county_id_fips, county, state,
+           total_co2_tons, ROW_NUMBER() OVER (ORDER BY total_co2_tons DESC) AS co2_rank,
+           total_so2_lbs,  ROW_NUMBER() OVER (ORDER BY total_so2_lbs DESC)  AS so2_rank,
+           total_nox_lbs,  ROW_NUMBER() OVER (ORDER BY total_nox_lbs DESC)  AS nox_rank
+    FROM county_totals
+)
+SELECT 'CO2' AS pollutant, co2_rank AS hotspot_rank, county, state,
+       total_co2_tons AS total_emissions, 'tons' AS units
+FROM ranked WHERE co2_rank <= 10
+UNION ALL
+SELECT 'SO2', so2_rank, county, state, total_so2_lbs, 'lbs'
+FROM ranked WHERE so2_rank <= 10
+UNION ALL
+SELECT 'NOx', nox_rank, county, state, total_nox_lbs, 'lbs'
+FROM ranked WHERE nox_rank <= 10
+ORDER BY pollutant, hotspot_rank;
+"""
+
 
 
 # Q4: seasonal capacity margin. Summer vs winter capacity of the operating thermal
