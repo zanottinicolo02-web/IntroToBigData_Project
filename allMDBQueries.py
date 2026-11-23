@@ -422,7 +422,7 @@ Q4 = [
     {"$group": {
         "_id": {
             "state": "$state",
-            "technology_description": "$yearly.technology_description",
+            "technology_description": "$lifetime_technology",
             "report_year": {"$year": "$yearly.report_date"},
         },
         "number_of_generators": {"$sum": 1},
