@@ -46,6 +46,7 @@ INDEXES = [
     ("generators", [("plant_id_eia", 1), ("generator_id", 1)]),
     ("generators", [("state", 1)]),
     ("generators", [("yearly.report_date", 1), ("yearly.technology_description", 1)]),
+    ("generators", [("yearly.operational_status_code", 1)]),
 
     ("units", [("plant_id_epa", 1), ("emissions_unit_id_epa", 1)]),
     ("units", [("plant_id_eia", 1)]),
@@ -59,6 +60,7 @@ INDEXES = [
 
     ("cems_hourly_emissions", [("unit.plant_id_eia", 1), ("operating_datetime_utc", 1)]),
     ("cems_hourly_emissions", [("unit.state", 1), ("operating_datetime_utc", 1)]),
+    ("cems_hourly_emissions", [("unit.plant_id_epa", 1), ("unit.emissions_unit_id_epa", 1), ("operating_datetime_utc", 1)]),
 
     ("unit_monthly", [("plant_id_eia", 1), ("month", 1)]),
     ("unit_monthly", [("state", 1), ("month", 1)]),
