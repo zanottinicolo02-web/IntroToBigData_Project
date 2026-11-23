@@ -512,7 +512,7 @@ Q5 = [
     {"$group": {
         "_id": {
             "state": "$unit.state",
-            {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
+            "year": {"$year": {"date": "$operating_datetime_utc", "timezone": "-05:00"}},
             "load_tier": "$load_tier",
         },
         "operating_hours": {"$sum": 1},
