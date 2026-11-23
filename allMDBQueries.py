@@ -402,6 +402,7 @@ Q4 = [
     # with summer and winter capacity present: $gt null is false for null and missing fields).
     {"$project": {
         "state": 1,
+        "lifetime_technology": {"$min": "$yearly.technology_description"},
         "yearly": {"$filter": {
             "input": "$yearly",
             "as": "y",
