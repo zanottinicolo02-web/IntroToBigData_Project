@@ -228,7 +228,7 @@ BENCHMARKS = {
         # The index will probably not help: small table, non-selective filter
         # and the GROUP BY cannot use the index order.
         index_columns=("operational_status_code, plant_id_eia, report_date, "
-                       "technology_description, fuel_type_code_pudl, "
+                       "fuel_type_code_pudl, "
                        "capacity_mw, summer_capacity_mw, winter_capacity_mw"),
     ),
     "q5": dict(
