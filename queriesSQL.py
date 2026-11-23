@@ -387,12 +387,18 @@ BENCHMARKS = {
         extra_title="Average emissions per MWh (by year and fuel)",
     ),
     "q2": dict(
-        title="Q2 - Heat Rate Degradation vs. Retirement Date",
-        sql=Q2,
-        table="cems_hourly_emissions",
-        index_name="idx_cems_heat_rate",
-        index_columns=("plant_id_epa, emissions_unit_id_epa, year, heat_content_mmbtu, gross_load_mw, operating_time_hours"),
-    ),
+    title="Q2 - Heat Rate Degradation vs. Retirement Date",
+    sql=Q2,
+    table="cems_hourly_emissions",
+    index_name="idx_cems_heat_rate",
+    index_columns=("plant_id_epa, emissions_unit_id_epa, year, heat_content_mmbtu, gross_load_mw, operating_time_hours"),
+    # Without better statistics the optimizer ignores the index (wrong row estimates).
+    # Executed right after the index is created, before the "with index" EXPLAIN/timing.
+    setup_sql=[
+        "ALTER TABLE cems_hourly_emissions STATS_SAMPLE_PAGES = 1000",
+        "ANALYZE TABLE cems_hourly_emissions",
+    ],
+),
     "q3": dict(
     title="Q3 - Spatial Hotspots",
     queries=[("Pareto test", Q3_PARETO), ("Top 10 hotspots", Q3_HOTSPOTS)],
@@ -504,6 +510,12 @@ def create_indexes(cur, b):
         cur.execute(f"CREATE INDEX {idx['index_name']} ON {idx['table']} ({idx['index_columns']})")
     return time.perf_counter() - start  # total build time of all the indexes
 
+def run_setup(cur, b):
+    """Optional statements to run after the index is created (e.g. ANALYZE TABLE)."""
+    for stmt in b.get("setup_sql", []):
+        print(f"  setup: {stmt}")
+        cur.execute(stmt)
+        cur.fetchall()  # ANALYZE TABLE returns a result set: consume it
 
 def run_benchmark(db, b):
     cur = db.cursor()
@@ -520,6 +532,7 @@ def run_benchmark(db, b):
 
     print("Creating indexes...")
     build_time = create_indexes(cur, b)
+    run_setup(cur, b)
 
     after = {}
     for label, sql in queries:
