@@ -3,7 +3,6 @@ Runs the MongoDB pipelines of allMDBQueries.py and reports results and timings.
 
 Usage:
     python MongoDBQueries.py                          # run all queries twice before indexes and twice after
-    python MongoDBQueries.py --only Q1 Q2             # selected queries
     python MongoDBQueries.py --out results            # rows printed / output folder (CSV)
 
 Requirements: pip install pymongo
