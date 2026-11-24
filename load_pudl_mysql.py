@@ -1,5 +1,5 @@
 """
-Loader: PUDL + EPA CEMS (US Northeast, sample years) -> MySQL 8.0
+Loader: PUDL + EPA CEMS (US Northeast, sample years) 
 
 - Reads the Parquet files directly from the public PUDL S3 bucket through DuckDB
   (filters are pushed down to the files, nothing is stored on the local disk).
